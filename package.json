@@ -1,0 +1,35 @@
+{
+  "name": "knitwork",
+  "version": "0.0.0",
+  "description": "",
+  "repository": "unjs/knitwork",
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./cjs/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepack": "unbuild",
+    "lint": "eslint --ext .ts,.js,.mjs,.cjs .",
+    "release": "yarn test && standard-version && git push --follow-tags && npm publish",
+    "test": "vitest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "latest",
+    "eslint": "latest",
+    "typescript": "latest",
+    "unbuild": "latest",
+    "vitest": "latest"
+  }
+}
