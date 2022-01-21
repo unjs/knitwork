@@ -20,5 +20,6 @@ jobs:
           cache: yarn
       - run: yarn install
       - run: yarn lint
+      - run: yarn build
       - run: yarn test --coverage
       - uses: codecov/codecov-action@v2

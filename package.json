@@ -9,7 +9,7 @@
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./cjs/index.cjs"
+      "require": "./dist/index.cjs"
     }
   },
   "main": "./dist/index.cjs",
