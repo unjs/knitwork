@@ -1,4 +1,4 @@
-# knitwork
+# 🧶 knitwork
 
 > Utilities to generate JavaScript code.
 
@@ -17,43 +17,31 @@ pnpm install knitwork
 
 ## Usage
 
-### `genImport`
-
-Generate a static import statement.
-
 ```js
-import { genImport } from 'knitwork'
+import { genImport, genExport } from 'knitwork'
 
 // import { foo } from "pkg"
+// import foo from "pkg"
 console.log(genImport('pkg', 'foo'))
 
 // import { a, b } from "pkg"
 console.log(genImport('pkg', 'foo'))
+console.log(genImport('pkg', ['a', 'b']))
 
 // import { foo as bar } from "pkg"
 console.log(genImport('pkg', { name: 'foo', as: 'bar' }))
-```
+console.log(genImport('pkg', [{ name: 'foo', as: 'bar' }]))
 
-### `genDynamicImport`
+// export foo from "pkg"
+console.log(genExport('pkg', 'foo'))
 
-Generate a dynamic import statement.
+// export { a, b } from "pkg"
+console.log(genExport('pkg', ['a', 'b']))
 
-```js
-import { genDynamicImport } from 'knitwork'
-
-// () => import("pkg")
-console.log(genDynamicImport('pkg'))
-
-// () => import("pkg").then(m => m.default || m)
-console.log(genDynamicImport('pkg', { interopDefault: true }))
-
-// import("pkg")
-console.log(genDynamicImport('pkg', { wrapper: false }))
-
-// () => import("pkg" /* webpackChunkName: "pkg" */)
-console.log(genDynamicImport('pkg', { comment: 'webpackChunkName: "pkg"' }))
+// export * as bar from "pkg"
+console.log(genExport('pkg', { name: '*foo*', as: 'bar' }))
 ```
 
 ## License
 
-MIT. Made with ❤️
+MIT. Made with 💛
