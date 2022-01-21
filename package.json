@@ -19,16 +19,19 @@
     "dist"
   ],
   "scripts": {
-    "prepack": "unbuild",
+    "build": "unbuild",
+    "dev": "vitest dev",
     "lint": "eslint --ext .ts,.js,.mjs,.cjs .",
+    "prepack": "unbuild",
     "release": "yarn test && standard-version && git push --follow-tags && npm publish",
-    "test": "vitest"
+    "test": "vitest run --coverage"
   },
   "dependencies": {},
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "latest",
     "c8": "latest",
     "eslint": "latest",
+    "standard-version": "latest",
     "typescript": "latest",
     "unbuild": "latest",
     "vitest": "latest"
