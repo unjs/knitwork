@@ -1,5 +1,10 @@
 # 🧶 knitwork
 
+[![npm version][npm-version-src]][npm-version-href]
+[![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![Github Actions][github-actions-src]][github-actions-href]
+[![Codecov][codecov-src]][codecov-href]
+
 > Utilities to generate JavaScript code.
 
 ## Install
@@ -42,6 +47,28 @@ console.log(genExport('pkg', ['a', 'b']))
 console.log(genExport('pkg', { name: '*foo*', as: 'bar' }))
 ```
 
+## 💻 Development
+
+- Clone this repository
+- Enable [Corepack](https://github.com/nodejs/corepack) using `corepack enable` (use `npm i -g corepack` for Node.js < 16.10)
+- Install dependencies using `yarn install`
+- Run interactive tests using `yarn dev`
+
 ## License
 
-MIT. Made with 💛
+Made with 💛
+
+Published under [MIT License](./LICENSE).
+
+<!-- Badges -->
+[npm-version-src]: https://img.shields.io/npm/v/knitwork?style=flat-square
+[npm-version-href]: https://npmjs.com/package/knitwork
+
+[npm-downloads-src]: https://img.shields.io/npm/dm/knitwork?style=flat-square
+[npm-downloads-href]: https://npmjs.com/package/knitwork
+
+[github-actions-src]: https://img.shields.io/github/workflow/status/unjs/knitwork/ci/main?style=flat-square
+[github-actions-href]: https://github.com/unjs/knitwork/actions?query=workflow%3Aci
+
+[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/knitwork/main?style=flat-square
+[codecov-href]: https://codecov.io/gh/unjs/knitwork
