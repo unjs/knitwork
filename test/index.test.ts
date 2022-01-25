@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'vitest'
-import { genImport, genExport, genDynamicImport } from '../src'
+import { genImport, genExport, genDynamicImport, genObjectFromRaw, genObjectFromRawEntries } from '../src'
 
 const genImportTests = [
   { names: 'foo', code: 'import foo from "pkg";' },
@@ -49,6 +49,61 @@ describe('genDynamicImport', () => {
   for (const t of genDynamicImportTests) {
     it(t.code, () => {
       const code = genDynamicImport('pkg', t.opts)
+      expect(code).to.equal(t.code)
+    })
+  }
+})
+
+const genObjectFromRawTests = [
+  {
+    obj: {
+      a: 'null',
+      b: null,
+      c: undefined,
+      1: 'undefined',
+      2: true,
+      3: 'true',
+      'obj 1': '{ literal: () => "test" }',
+      'obj 2': { nested: { foo: '"bar"' } },
+      arr: ['1', '2', '3']
+    },
+    code: [
+      '{',
+      '  1: undefined,',
+      '  2: true,',
+      '  3: true,',
+      '  a: null,',
+      '  b: null,',
+      '  c: undefined,',
+      '  "obj 1": { literal: () => "test" },',
+      '  "obj 2": {',
+      '    nested: {',
+      '      foo: "bar"',
+      '    }',
+      '  },',
+      '  arr: [',
+      '    1,',
+      '    2,',
+      '    3',
+      '  ]',
+      '}'
+    ].join('\n')
+  }
+]
+
+describe('genObjectFromRaw', () => {
+  for (const t of genObjectFromRawTests) {
+    it(t.code, () => {
+      const code = genObjectFromRaw(t.obj)
+      expect(code).to.equal(t.code)
+    })
+  }
+})
+
+describe('genObjectFromRawEntries', () => {
+  for (const t of genObjectFromRawTests) {
+    it(t.code, () => {
+      const code = genObjectFromRawEntries(Object.entries(t.obj))
       expect(code).to.equal(t.code)
     })
   }

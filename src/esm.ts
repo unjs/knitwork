@@ -1,6 +1,6 @@
 
 import { CodegenOptions } from './types'
-import { genString } from './js'
+import { genString } from './string'
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
 // https://tc39.es/ecma262/multipage/ecmascript-language-scripts-and-modules.html#sec-imports

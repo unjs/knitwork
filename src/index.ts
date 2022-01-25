@@ -1,3 +1,4 @@
 export * from './esm'
-export * from './js'
+export * from './object'
+export * from './string'
 export * from './types'

@@ -22,6 +22,8 @@ pnpm install knitwork
 
 ## Usage
 
+**Generating ESM syntax:**
+
 ```js
 import { genImport, genExport } from 'knitwork'
 
@@ -45,6 +47,23 @@ console.log(genExport('pkg', ['a', 'b']))
 
 // export * as bar from "pkg"
 console.log(genExport('pkg', { name: '*foo*', as: 'bar' }))
+```
+
+**Serializing JS objects:**
+
+```js
+import { genObjectFromRaw, genObjectFromRawEntries, genArrayFromRaw } from 'knitwork'
+
+// { test: () => import("pkg") }
+console.log(genObjectFromRaw({ test: '() => import("pkg")' }))
+
+// { test: () => import("pkg") }
+console.log(genObjectFromRaw([ ['test', '() => import("pkg")'] ]))
+
+console.log(genObjectFromRawEntries(entries))
+
+// [ 1, 2, () => import("pkg") ]
+console.log(genArrayFromRaw(['1', '2', '() => import("pkg")']))
 ```
 
 ## 💻 Development
