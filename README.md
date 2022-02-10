@@ -27,16 +27,19 @@ pnpm install knitwork
 ```js
 import { genImport, genExport } from 'knitwork'
 
-// import { foo } from "pkg"
 // import foo from "pkg"
 console.log(genImport('pkg', 'foo'))
 
+// import { foo } from "pkg"
+console.log(genImport('pkg', ['foo']))
+
 // import { a, b } from "pkg"
-console.log(genImport('pkg', 'foo'))
 console.log(genImport('pkg', ['a', 'b']))
 
-// import { foo as bar } from "pkg"
+// import foo as bar from "pkg";
 console.log(genImport('pkg', { name: 'foo', as: 'bar' }))
+
+// import { foo as bar } from "pkg";
 console.log(genImport('pkg', [{ name: 'foo', as: 'bar' }]))
 
 // export foo from "pkg"
@@ -46,7 +49,7 @@ console.log(genExport('pkg', 'foo'))
 console.log(genExport('pkg', ['a', 'b']))
 
 // export * as bar from "pkg"
-console.log(genExport('pkg', { name: '*foo*', as: 'bar' }))
+console.log(genExport('pkg', { name: '*', as: 'bar' }))
 ```
 
 **Serializing JS objects:**
@@ -57,9 +60,13 @@ import { genObjectFromRaw, genObjectFromRawEntries, genArrayFromRaw } from 'knit
 // { test: () => import("pkg") }
 console.log(genObjectFromRaw({ test: '() => import("pkg")' }))
 
-// { test: () => import("pkg") }
+// { 0: [ test, () => import("pkg") ] }
 console.log(genObjectFromRaw([ ['test', '() => import("pkg")'] ]))
 
+const entries = Object.entries({
+  a: 1, b: null, c: '"c"', nest: { hello: '"world"', fn: () => 1 }
+})
+// { a: 1, b: null, c: "c", nest: { hello: "world", fn: () => 1 } }
 console.log(genObjectFromRawEntries(entries))
 
 // [ 1, 2, () => import("pkg") ]
