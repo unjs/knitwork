@@ -10,6 +10,18 @@ export function genImport (specifier: string, imports?: ESMImport | ESMImport[],
   return _genStatement('import', specifier, imports, opts)
 }
 
+export function genTypeImport (specifier: string, imports: ESMImport[], opts: CodegenOptions = {}) {
+  return _genStatement('import type', specifier, imports, opts)
+}
+
+export function genTypeExport (specifier: string, imports: ESMImport[], opts: CodegenOptions = {}) {
+  return _genStatement('export type', specifier, imports, opts)
+}
+
+export const genInlineTypeImport = (specifier: string, name = 'default', opts: CodegenOptions = {}) => {
+  return `typeof ${genDynamicImport(specifier, { ...opts, wrapper: false })}.${name}`
+}
+
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export
 // https://tc39.es/ecma262/multipage/ecmascript-language-scripts-and-modules.html#sec-exports
 export type ESMExport = string | { name: string, as?: string }
@@ -19,7 +31,7 @@ export function genExport (specifier: string, exports?: ESMExport | ESMExport[],
 }
 
 type ESMImportOrExport = ESMImport | ESMExport
-function _genStatement (type: 'import' | 'export', specifier: string, names?: ESMImportOrExport | ESMImportOrExport[], opts: CodegenOptions = {}) {
+function _genStatement (type: 'import' | 'export' | 'import type' | 'export type', specifier: string, names?: ESMImportOrExport | ESMImportOrExport[], opts: CodegenOptions = {}) {
   const specifierStr = genString(specifier, opts)
   if (!names) {
     return `${type} ${specifierStr};`

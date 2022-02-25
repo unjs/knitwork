@@ -1,4 +1,4 @@
-import { genString } from './string'
+import { genObjectKey, wrapInDelimiters } from './utils'
 
 export function genObjectFromRaw (obj: Record<string, any>, indent = ''): string {
   return genObjectFromRawEntries(Object.entries(obj), indent)
@@ -16,14 +16,6 @@ export function genObjectFromRawEntries (array: [key: string, value: any][], ind
 
 // --- Internals ---
 
-function wrapInDelimiters (lines: string[], indent = '', delimiters = '{}') {
-  if (!lines.length) {
-    return delimiters
-  }
-  const [start, end] = delimiters
-  return `${start}\n` + lines.join(',\n') + `\n${indent}${end}`
-}
-
 function genRawValue (value: unknown, indent = ''): string {
   if (typeof value === 'undefined') {
     return 'undefined'
@@ -38,10 +30,4 @@ function genRawValue (value: unknown, indent = ''): string {
     return genObjectFromRaw(value, indent)
   }
   return value.toString()
-}
-
-const VALID_IDENTIFIER_RE = /^[$_]?[\w\d]*$/
-
-function genObjectKey (key: string) {
-  return key.match(VALID_IDENTIFIER_RE) ? key : genString(key)
 }
