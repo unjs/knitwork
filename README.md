@@ -52,6 +52,30 @@ console.log(genExport('pkg', ['a', 'b']))
 console.log(genExport('pkg', { name: '*', as: 'bar' }))
 ```
 
+**Generating TS:**
+
+```js
+import { genInterface, genAugmentation, genInlineTypeImport, genTypeImport, genTypeExport } from 'knitwork'
+
+// interface FooInterface extends A, B {
+//   name: boolean
+//   optional?: string
+// }
+console.log(genInterface('FooInterface', { name: 'boolean', 'optional?': 'string' }, { extends: ['A', 'B'] }))
+// declare module "my-module" {
+//   interface MyInterface {}
+// }
+console.log(genAugmentation('my-module', { MyInterface: {} }))
+// typeof import("my-module").genString'
+console.log(genInlineTypeImport('my-module', 'genString'))
+// typeof import("my-module").default'
+console.log(genInlineTypeImport('my-module'))
+// import type { test as value } from "my-module";
+console.log(genTypeImport('my-module', [{ name: 'test', as: 'value' }]))
+// export type { test } from "my-module";
+console.log(genTypeExport('my-module', ['test']))
+```
+
 **Serializing JS objects:**
 
 ```js
