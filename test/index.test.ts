@@ -144,10 +144,16 @@ describe('genInterface', () => {
 const genAugmentationTests: Array<{ input: Parameters<typeof genAugmentation>, code: string }> = [
   { input: ['@nuxt/utils'], code: 'declare module "@nuxt/utils" {}' },
   {
-    input: ['@nuxt/utils', { MyInterface: {} }],
+    input: ['@nuxt/utils', {
+      MyInterface: {
+        'test?': 'string'
+      }
+    }],
     code:
 `declare module "@nuxt/utils" {
-  interface MyInterface {}
+  interface MyInterface {
+    test?: string
+  }
 }`
   },
   {

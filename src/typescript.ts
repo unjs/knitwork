@@ -21,12 +21,12 @@ export const genTypeObject = (obj: TypeObject, indent = '') => {
   }), indent, '{}', false)
 }
 
-export const genInterface = (name: string, contents?: TypeObject, options: GenInterfaceOptions = {}) => {
+export const genInterface = (name: string, contents?: TypeObject, options: GenInterfaceOptions = {}, indent = '') => {
   const result = [
     options.export && 'export',
     `interface ${name}`,
     options.extends && `extends ${Array.isArray(options.extends) ? options.extends.join(', ') : options.extends}`,
-    contents ? genTypeObject(contents) : '{}'
+    contents ? genTypeObject(contents, indent) : '{}'
   ].filter(Boolean).join(' ')
   return result
 }
@@ -34,7 +34,7 @@ export const genInterface = (name: string, contents?: TypeObject, options: GenIn
 export const genAugmentation = (specifier: string, interfaces?: Record<string, TypeObject | [TypeObject, Omit<GenInterfaceOptions, 'export'>]>) => {
   return `declare module ${genString(specifier)} ${wrapInDelimiters(
     Object.entries(interfaces || {}).map(
-      ([key, entry]) => '  ' + (Array.isArray(entry) ? genInterface(key, ...entry) : genInterface(key, entry))
+      ([key, entry]) => '  ' + (Array.isArray(entry) ? genInterface(key, ...entry, '  ') : genInterface(key, entry, {}, '  '))
     )
   )}`
 }
