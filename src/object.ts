@@ -1,22 +1,22 @@
 import { genObjectKey, wrapInDelimiters } from './utils'
 
-export function genObjectFromRaw (obj: Record<string, any>, indent = ''): string {
-  return genObjectFromRawEntries(Object.entries(obj), indent)
+export function genObjectFromRaw (obj: Record<string, any>, indent = '', preserveString: boolean = false): string {
+  return genObjectFromRawEntries(Object.entries(obj), indent, preserveString)
 }
 
-export function genArrayFromRaw (array: any[], indent = '') {
+export function genArrayFromRaw (array: any[], indent = '', preserveString: boolean = false) {
   const newIdent = indent + '  '
-  return wrapInDelimiters(array.map(i => `${newIdent}${genRawValue(i, newIdent)}`), indent, '[]')
+  return wrapInDelimiters(array.map(i => `${newIdent}${genRawValue(i, newIdent, preserveString)}`), indent, '[]')
 }
 
-export function genObjectFromRawEntries (array: [key: string, value: any][], indent = '') {
+export function genObjectFromRawEntries (array: [key: string, value: any][], indent = '', preserveString: boolean = false) {
   const newIdent = indent + '  '
-  return wrapInDelimiters(array.map(([key, value]) => `${newIdent}${genObjectKey(key)}: ${genRawValue(value, newIdent)}`), indent, '{}')
+  return wrapInDelimiters(array.map(([key, value]) => `${newIdent}${genObjectKey(key)}: ${genRawValue(value, newIdent, preserveString)}`), indent, '{}')
 }
 
 // --- Internals ---
 
-function genRawValue (value: unknown, indent = ''): string {
+function genRawValue (value: unknown, indent = '', preserveString: boolean = false): string {
   if (typeof value === 'undefined') {
     return 'undefined'
   }
@@ -24,10 +24,13 @@ function genRawValue (value: unknown, indent = ''): string {
     return 'null'
   }
   if (Array.isArray(value)) {
-    return genArrayFromRaw(value, indent)
+    return genArrayFromRaw(value, indent, preserveString)
   }
   if (value && typeof value === 'object') {
-    return genObjectFromRaw(value, indent)
+    return genObjectFromRaw(value, indent, preserveString)
+  }
+  if (preserveString && typeof value !== 'function') {
+    return JSON.stringify(value)
   }
   return value.toString()
 }

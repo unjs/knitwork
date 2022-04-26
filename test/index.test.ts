@@ -65,7 +65,7 @@ const genObjectFromRawTests = [
       3: 'true',
       'obj 1': '{ literal: () => "test" }',
       'obj 2': { nested: { foo: '"bar"' } },
-      arr: ['1', '2', '3']
+      arr: ['1', '2', 3]
     },
     code: [
       '{',
@@ -87,14 +87,50 @@ const genObjectFromRawTests = [
       '    3',
       '  ]',
       '}'
-    ].join('\n')
+    ].join('\n'),
+    preserveString: false
+  },
+  {
+    obj: {
+      a: 'null',
+      b: null,
+      c: undefined,
+      1: 'undefined',
+      2: true,
+      3: 'true',
+      'obj 1': '{ literal: () => "test" }',
+      'obj 2': { nested: { foo: 'bar' } },
+      arr: ['1', '2', 3]
+    },
+    code: [
+      '{',
+      '  1: "undefined",',
+      '  2: true,',
+      '  3: "true",',
+      '  a: "null",',
+      '  b: null,',
+      '  c: undefined,',
+      '  "obj 1": "{ literal: () => \\"test\\" }",',
+      '  "obj 2": {',
+      '    nested: {',
+      '      foo: "bar"',
+      '    }',
+      '  },',
+      '  arr: [',
+      '    "1",',
+      '    "2",',
+      '    3',
+      '  ]',
+      '}'
+    ].join('\n'),
+    preserveString: true
   }
 ]
 
 describe('genObjectFromRaw', () => {
   for (const t of genObjectFromRawTests) {
     it(t.code, () => {
-      const code = genObjectFromRaw(t.obj)
+      const code = genObjectFromRaw(t.obj, '', t.preserveString)
       expect(code).to.equal(t.code)
     })
   }
@@ -103,7 +139,7 @@ describe('genObjectFromRaw', () => {
 describe('genObjectFromRawEntries', () => {
   for (const t of genObjectFromRawTests) {
     it(t.code, () => {
-      const code = genObjectFromRawEntries(Object.entries(t.obj))
+      const code = genObjectFromRawEntries(Object.entries(t.obj), '', t.preserveString)
       expect(code).to.equal(t.code)
     })
   }
