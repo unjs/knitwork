@@ -81,6 +81,9 @@ console.log(genTypeExport('my-module', ['test']))
 ```js
 import { genObjectFromRaw, genObjectFromRawEntries, genArrayFromRaw } from 'knitwork'
 
+// { foo: 'bar', test: () => import("pkg") }
+console.log(genObjectFromValues({ foo: 'bar', test: '() => import("pkg")' }))
+
 // { test: () => import("pkg") }
 console.log(genObjectFromRaw({ test: '() => import("pkg")' }))
 
