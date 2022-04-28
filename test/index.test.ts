@@ -94,7 +94,7 @@ const genObjectFromValuesTests = [
 describe('genObjectFromValues', () => {
   for (const t of genObjectFromValuesTests) {
     it(t.code, () => {
-      const code = genObjectFromValues(t.obj, '')
+      const code = genObjectFromValues(t.obj)
       expect(code).to.equal(t.code)
     })
   }
@@ -140,7 +140,7 @@ const genObjectFromRawTests = [
 describe('genObjectFromRaw', () => {
   for (const t of genObjectFromRawTests) {
     it(t.code, () => {
-      const code = genObjectFromRaw(t.obj, '')
+      const code = genObjectFromRaw(t.obj)
       expect(code).to.equal(t.code)
     })
   }
@@ -149,7 +149,7 @@ describe('genObjectFromRaw', () => {
 describe('genObjectFromRawEntries', () => {
   for (const t of genObjectFromRawTests) {
     it(t.code, () => {
-      const code = genObjectFromRawEntries(Object.entries(t.obj), '')
+      const code = genObjectFromRawEntries(Object.entries(t.obj))
       expect(code).to.equal(t.code)
     })
   }
