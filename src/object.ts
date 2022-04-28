@@ -1,22 +1,26 @@
 import { genObjectKey, wrapInDelimiters } from './utils'
 
-export function genObjectFromRaw (obj: Record<string, any>, indent = '', preserveString: boolean = false): string {
-  return genObjectFromRawEntries(Object.entries(obj), indent, preserveString)
+export function genObjectFromValues (obj: Record<string, any>, indent = ''): string {
+  return genObjectFromRaw(obj, indent, true)
 }
 
-export function genArrayFromRaw (array: any[], indent = '', preserveString: boolean = false) {
-  const newIdent = indent + '  '
-  return wrapInDelimiters(array.map(i => `${newIdent}${genRawValue(i, newIdent, preserveString)}`), indent, '[]')
+export function genObjectFromRaw (obj: Record<string, any>, indent = '', preserveTypes = false): string {
+  return genObjectFromRawEntries(Object.entries(obj), indent, preserveTypes)
 }
 
-export function genObjectFromRawEntries (array: [key: string, value: any][], indent = '', preserveString: boolean = false) {
+export function genArrayFromRaw (array: any[], indent = '', preserveTypes: boolean = false) {
   const newIdent = indent + '  '
-  return wrapInDelimiters(array.map(([key, value]) => `${newIdent}${genObjectKey(key)}: ${genRawValue(value, newIdent, preserveString)}`), indent, '{}')
+  return wrapInDelimiters(array.map(i => `${newIdent}${genRawValue(i, newIdent, preserveTypes)}`), indent, '[]')
+}
+
+export function genObjectFromRawEntries (array: [key: string, value: any][], indent = '', preserveTypes = false) {
+  const newIdent = indent + '  '
+  return wrapInDelimiters(array.map(([key, value]) => `${newIdent}${genObjectKey(key)}: ${genRawValue(value, newIdent, preserveTypes)}`), indent, '{}')
 }
 
 // --- Internals ---
 
-function genRawValue (value: unknown, indent = '', preserveString: boolean = false): string {
+function genRawValue (value: unknown, indent = '', preserveTypes = false): string {
   if (typeof value === 'undefined') {
     return 'undefined'
   }
@@ -24,12 +28,12 @@ function genRawValue (value: unknown, indent = '', preserveString: boolean = fal
     return 'null'
   }
   if (Array.isArray(value)) {
-    return genArrayFromRaw(value, indent, preserveString)
+    return genArrayFromRaw(value, indent, preserveTypes)
   }
   if (value && typeof value === 'object') {
-    return genObjectFromRaw(value, indent, preserveString)
+    return genObjectFromRaw(value, indent, preserveTypes)
   }
-  if (preserveString && typeof value !== 'function') {
+  if (preserveTypes && typeof value !== 'function') {
     return JSON.stringify(value)
   }
   return value.toString()

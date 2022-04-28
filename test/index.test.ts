@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'vitest'
-import { genImport, genExport, genDynamicImport, genObjectFromRaw, genObjectFromRawEntries, genInterface, genAugmentation, genInlineTypeImport, genTypeImport, genTypeExport } from '../src'
+import { genImport, genExport, genDynamicImport, genObjectFromRaw, genObjectFromRawEntries, genInterface, genAugmentation, genInlineTypeImport, genTypeImport, genTypeExport, genObjectFromValues } from '../src'
 
 const genImportTests = [
   { names: 'foo', code: 'import foo from "pkg";' },
@@ -54,6 +54,52 @@ describe('genDynamicImport', () => {
   }
 })
 
+const genObjectFromValuesTests = [
+  {
+    obj: {
+      a: 'null',
+      b: null,
+      c: undefined,
+      1: 'undefined',
+      2: true,
+      3: 'true',
+      'obj 1': '{ literal: () => "test" }',
+      'obj 2': { nested: { foo: 'bar' } },
+      arr: ['1', '2', 3]
+    },
+    code: [
+      '{',
+      '  1: "undefined",',
+      '  2: true,',
+      '  3: "true",',
+      '  a: "null",',
+      '  b: null,',
+      '  c: undefined,',
+      '  "obj 1": "{ literal: () => \\"test\\" }",',
+      '  "obj 2": {',
+      '    nested: {',
+      '      foo: "bar"',
+      '    }',
+      '  },',
+      '  arr: [',
+      '    "1",',
+      '    "2",',
+      '    3',
+      '  ]',
+      '}'
+    ].join('\n')
+  }
+]
+
+describe('genObjectFromValues', () => {
+  for (const t of genObjectFromValuesTests) {
+    it(t.code, () => {
+      const code = genObjectFromValues(t.obj, '')
+      expect(code).to.equal(t.code)
+    })
+  }
+})
+
 const genObjectFromRawTests = [
   {
     obj: {
@@ -87,50 +133,14 @@ const genObjectFromRawTests = [
       '    3',
       '  ]',
       '}'
-    ].join('\n'),
-    preserveString: false
-  },
-  {
-    obj: {
-      a: 'null',
-      b: null,
-      c: undefined,
-      1: 'undefined',
-      2: true,
-      3: 'true',
-      'obj 1': '{ literal: () => "test" }',
-      'obj 2': { nested: { foo: 'bar' } },
-      arr: ['1', '2', 3]
-    },
-    code: [
-      '{',
-      '  1: "undefined",',
-      '  2: true,',
-      '  3: "true",',
-      '  a: "null",',
-      '  b: null,',
-      '  c: undefined,',
-      '  "obj 1": "{ literal: () => \\"test\\" }",',
-      '  "obj 2": {',
-      '    nested: {',
-      '      foo: "bar"',
-      '    }',
-      '  },',
-      '  arr: [',
-      '    "1",',
-      '    "2",',
-      '    3',
-      '  ]',
-      '}'
-    ].join('\n'),
-    preserveString: true
+    ].join('\n')
   }
 ]
 
 describe('genObjectFromRaw', () => {
   for (const t of genObjectFromRawTests) {
     it(t.code, () => {
-      const code = genObjectFromRaw(t.obj, '', t.preserveString)
+      const code = genObjectFromRaw(t.obj, '')
       expect(code).to.equal(t.code)
     })
   }
@@ -139,7 +149,7 @@ describe('genObjectFromRaw', () => {
 describe('genObjectFromRawEntries', () => {
   for (const t of genObjectFromRawTests) {
     it(t.code, () => {
-      const code = genObjectFromRawEntries(Object.entries(t.obj), '', t.preserveString)
+      const code = genObjectFromRawEntries(Object.entries(t.obj), '')
       expect(code).to.equal(t.code)
     })
   }
