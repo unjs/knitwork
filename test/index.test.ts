@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'vitest'
-import { genImport, genExport, genDynamicImport, genObjectFromRaw, genObjectFromRawEntries, genInterface, genAugmentation, genInlineTypeImport, genTypeImport, genTypeExport, genImportName } from '../src'
+import { genImport, genExport, genDynamicImport, genObjectFromRaw, genObjectFromRawEntries, genInterface, genAugmentation, genInlineTypeImport, genTypeImport, genTypeExport, genSafeVariableName } from '../src'
 
 const genImportTests = [
   { names: 'foo', code: 'import foo from "pkg";' },
@@ -54,16 +54,16 @@ describe('genDynamicImport', () => {
   }
 })
 
-const genImportNameTests = [
+const genSafeVariableNameTests = [
   { key: 'valid_import', code: 'valid_import' },
   { key: 'with space', code: 'with_32space' },
   { key: '123 numbers', code: '_4923_32numbers' }
 ]
 
-describe('genImportName', () => {
-  for (const t of genImportNameTests) {
+describe('genSafeVariableName', () => {
+  for (const t of genSafeVariableNameTests) {
     it(t.code, () => {
-      const code = genImportName(t.key)
+      const code = genSafeVariableName(t.key)
       expect(code).to.equal(t.code)
     })
   }

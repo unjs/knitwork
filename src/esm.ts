@@ -65,6 +65,58 @@ export function genDynamicImport (specifier: string, opts: DynamicImportOptions 
   return `${wrapperStr}import(${genString(specifier, opts)}${commentStr})${ineropStr}`
 }
 
-export function genImportName (name: string) {
+export function genSafeVariableName (name: string) {
+  if (reservedNames.includes(name)) { return `_${name}` }
   return name.replace(/^[^_a-zA-Z]|[^\w]/g, r => '_' + r.charCodeAt(0))
 }
+
+const reservedNames = [
+  'do',
+  'if',
+  'in',
+  'for',
+  'let',
+  'new',
+  'try',
+  'var',
+  'case',
+  'else',
+  'enum',
+  'eval',
+  'null',
+  'this',
+  'true',
+  'void',
+  'with',
+  'await',
+  'break',
+  'catch',
+  'class',
+  'const',
+  'false',
+  'super',
+  'throw',
+  'while',
+  'yield',
+  'delete',
+  'export',
+  'import',
+  'public',
+  'return',
+  'static',
+  'switch',
+  'typeof',
+  'default',
+  'extends',
+  'finally',
+  'package',
+  'private',
+  'continue',
+  'debugger',
+  'function',
+  'arguments',
+  'interface',
+  'protected',
+  'implements',
+  'instanceof'
+]
