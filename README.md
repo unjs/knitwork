@@ -97,6 +97,15 @@ console.log(genObjectFromRawEntries(entries))
 console.log(genArrayFromRaw(['1', '2', '() => import("pkg")']))
 ```
 
+**Other utils**
+
+```js
+import { genImportName } from 'knitwork'
+
+// _4923_32foo
+genImportName('123 foo')
+```
+
 ## 💻 Development
 
 - Clone this repository

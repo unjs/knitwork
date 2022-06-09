@@ -1,4 +1,3 @@
-
 import { CodegenOptions } from './types'
 import { genString } from './string'
 
@@ -64,4 +63,8 @@ export function genDynamicImport (specifier: string, opts: DynamicImportOptions 
   const wrapperStr = (opts.wrapper === false) ? '' : '() => '
   const ineropStr = opts.interopDefault ? '.then(m => m.default || m)' : ''
   return `${wrapperStr}import(${genString(specifier, opts)}${commentStr})${ineropStr}`
+}
+
+export function genImportName (name: string) {
+  return name.replace(/^[^_a-zA-Z]|[^\w]/g, r => '_' + r.charCodeAt(0))
 }
