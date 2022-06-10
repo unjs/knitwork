@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'vitest'
-import { genImport, genExport, genDynamicImport, genObjectFromRaw, genObjectFromRawEntries, genInterface, genAugmentation, genInlineTypeImport, genTypeImport, genTypeExport } from '../src'
+import { genImport, genExport, genDynamicImport, genObjectFromRaw, genObjectFromRawEntries, genInterface, genAugmentation, genInlineTypeImport, genTypeImport, genTypeExport, genSafeVariableName } from '../src'
 
 const genImportTests = [
   { names: 'foo', code: 'import foo from "pkg";' },
@@ -49,6 +49,22 @@ describe('genDynamicImport', () => {
   for (const t of genDynamicImportTests) {
     it(t.code, () => {
       const code = genDynamicImport('pkg', t.opts)
+      expect(code).to.equal(t.code)
+    })
+  }
+})
+
+const genSafeVariableNameTests = [
+  { key: 'valid_import', code: 'valid_import' },
+  { key: 'for', code: '_for' },
+  { key: 'with space', code: 'with_32space' },
+  { key: '123 numbers', code: '_123_32numbers' }
+]
+
+describe('genSafeVariableName', () => {
+  for (const t of genSafeVariableNameTests) {
+    it(t.code, () => {
+      const code = genSafeVariableName(t.key)
       expect(code).to.equal(t.code)
     })
   }
@@ -116,7 +132,7 @@ const genInterfaceTests: Array<{ input: Parameters<typeof genInterface>, code: s
   {
     input: ['FooInterface', { name: 'boolean', 'other name"': { value: '() => {}' } }],
     code:
-`interface FooInterface {
+      `interface FooInterface {
   name: boolean
   "other name\\"": {
     value: () => {}
@@ -126,7 +142,7 @@ const genInterfaceTests: Array<{ input: Parameters<typeof genInterface>, code: s
   {
     input: ['FooInterface', { "na'me?": 'boolean' }],
     code:
-`interface FooInterface {
+      `interface FooInterface {
   "na'me"?: boolean
 }`
   }
@@ -146,14 +162,14 @@ const genAugmentationTests: Array<{ input: Parameters<typeof genAugmentation>, c
   {
     input: ['@nuxt/utils', { MyInterface: {} }],
     code:
-`declare module "@nuxt/utils" {
+      `declare module "@nuxt/utils" {
   interface MyInterface {}
 }`
   },
   {
     input: ['@nuxt/utils', { MyInterface: [{}, { extends: ['OtherInterface', 'FurtherInterface'] }] }],
     code:
-`declare module "@nuxt/utils" {
+      `declare module "@nuxt/utils" {
   interface MyInterface extends OtherInterface, FurtherInterface {}
 }`
   }

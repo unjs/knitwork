@@ -97,6 +97,17 @@ console.log(genObjectFromRawEntries(entries))
 console.log(genArrayFromRaw(['1', '2', '() => import("pkg")']))
 ```
 
+**Generating safe variable names:**
+
+```js
+import { genSafeVariableName } from 'knitwork'
+
+// _123_32foo
+genSafeVariableName('123 foo')
+// _for
+genSafeVariableName('for')
+```
+
 ## 💻 Development
 
 - Clone this repository

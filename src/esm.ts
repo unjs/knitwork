@@ -1,4 +1,3 @@
-
 import { CodegenOptions } from './types'
 import { genString } from './string'
 
@@ -65,3 +64,17 @@ export function genDynamicImport (specifier: string, opts: DynamicImportOptions 
   const ineropStr = opts.interopDefault ? '.then(m => m.default || m)' : ''
   return `${wrapperStr}import(${genString(specifier, opts)}${commentStr})${ineropStr}`
 }
+
+export function genSafeVariableName (name: string) {
+  if (reservedNames.has(name)) { return `_${name}` }
+  return name.replace(/^[0-9]/, r => `_${r}`).replace(/[^_a-zA-Z0-9]/g, r => '_' + r.charCodeAt(0))
+}
+
+// Credit: https://mathiasbynens.be/notes/reserved-keywords
+const reservedNames = new Set([
+  'Infinity', 'NaN', 'arguments', 'await', 'break', 'case', 'catch', 'class', 'const', 'continue', 'debugger',
+  'default', 'delete', 'do', 'else', 'enum', 'eval', 'export', 'extends', 'false', 'finally', 'for', 'function',
+  'if', 'implements', 'import', 'in', 'instanceof', 'interface', 'let', 'new', 'null', 'package', 'private',
+  'protected', 'public', 'return', 'static', 'super', 'switch', 'this', 'throw', 'true', 'try', 'typeof',
+  'undefined', 'var', 'void', 'while', 'with', 'yield'
+])
