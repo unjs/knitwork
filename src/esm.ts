@@ -76,5 +76,5 @@ const reservedNames = new Set([
   'with', 'await', 'break', 'catch', 'class', 'const', 'false', 'super', 'throw', 'while', 'yield', 'delete', 'export',
   'import', 'public', 'return', 'static', 'switch', 'typeof', 'default', 'extends', 'finally', 'package', 'private',
   'continue', 'debugger', 'function', 'arguments', 'interface', 'protected', 'implements', 'instanceof',
-  'null', 'undefined'
+  'null', 'undefined', 'NaN', 'Infinity', 'eval', 'arguments'
 ])
