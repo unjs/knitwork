@@ -5,15 +5,15 @@ import { genString } from './string'
 // https://tc39.es/ecma262/multipage/ecmascript-language-scripts-and-modules.html#sec-imports
 export type ESMImport = string | { name: string, as?: string }
 
-export function genImport(specifier: string, imports?: ESMImport | ESMImport[], opts: CodegenOptions = {}) {
+export function genImport (specifier: string, imports?: ESMImport | ESMImport[], opts: CodegenOptions = {}) {
   return _genStatement('import', specifier, imports, opts)
 }
 
-export function genTypeImport(specifier: string, imports: ESMImport[], opts: CodegenOptions = {}) {
+export function genTypeImport (specifier: string, imports: ESMImport[], opts: CodegenOptions = {}) {
   return _genStatement('import type', specifier, imports, opts)
 }
 
-export function genTypeExport(specifier: string, imports: ESMImport[], opts: CodegenOptions = {}) {
+export function genTypeExport (specifier: string, imports: ESMImport[], opts: CodegenOptions = {}) {
   return _genStatement('export type', specifier, imports, opts)
 }
 
@@ -25,12 +25,12 @@ export const genInlineTypeImport = (specifier: string, name = 'default', opts: C
 // https://tc39.es/ecma262/multipage/ecmascript-language-scripts-and-modules.html#sec-exports
 export type ESMExport = string | { name: string, as?: string }
 
-export function genExport(specifier: string, exports?: ESMExport | ESMExport[], opts: CodegenOptions = {}) {
+export function genExport (specifier: string, exports?: ESMExport | ESMExport[], opts: CodegenOptions = {}) {
   return _genStatement('export', specifier, exports, opts)
 }
 
 type ESMImportOrExport = ESMImport | ESMExport
-function _genStatement(type: 'import' | 'export' | 'import type' | 'export type', specifier: string, names?: ESMImportOrExport | ESMImportOrExport[], opts: CodegenOptions = {}) {
+function _genStatement (type: 'import' | 'export' | 'import type' | 'export type', specifier: string, names?: ESMImportOrExport | ESMImportOrExport[], opts: CodegenOptions = {}) {
   const specifierStr = genString(specifier, opts)
   if (!names) {
     return `${type} ${specifierStr};`
@@ -58,14 +58,14 @@ export interface DynamicImportOptions extends CodegenOptions {
   wrapper?: boolean
   interopDefault?: boolean
 }
-export function genDynamicImport(specifier: string, opts: DynamicImportOptions = {}) {
+export function genDynamicImport (specifier: string, opts: DynamicImportOptions = {}) {
   const commentStr = opts.comment ? ` /* ${opts.comment} */` : ''
   const wrapperStr = (opts.wrapper === false) ? '' : '() => '
   const ineropStr = opts.interopDefault ? '.then(m => m.default || m)' : ''
   return `${wrapperStr}import(${genString(specifier, opts)}${commentStr})${ineropStr}`
 }
 
-export function genSafeVariableName(name: string) {
+export function genSafeVariableName (name: string) {
   if (reservedNames.has(name)) { return `_${name}` }
   return name.replace(/^[0-9]/, r => `_${r}`).replace(/[^_a-zA-Z0-9]/g, r => '_' + r.charCodeAt(0))
 }
