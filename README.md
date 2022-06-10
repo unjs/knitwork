@@ -102,7 +102,7 @@ console.log(genArrayFromRaw(['1', '2', '() => import("pkg")']))
 ```js
 import { genSafeVariableName } from 'knitwork'
 
-// _4923_32foo
+// _123_32foo
 genSafeVariableName('123 foo')
 ```
 
