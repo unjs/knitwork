@@ -67,7 +67,7 @@ export function genDynamicImport (specifier: string, opts: DynamicImportOptions 
 
 export function genSafeVariableName (name: string) {
   if (reservedNames.has(name)) { return `_${name}` }
-  return name.replace(/^[^_a-zA-Z]|[^\w]/g, r => '_' + r.charCodeAt(0))
+  return name.replace(/^[0-9]/, r => `_${r}`).replace(/[^_a-zA-Z0-9]/g, r => '_' + r.charCodeAt(0))
 }
 
 // Credit: https://mathiasbynens.be/notes/reserved-keywords

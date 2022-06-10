@@ -57,7 +57,7 @@ describe('genDynamicImport', () => {
 const genSafeVariableNameTests = [
   { key: 'valid_import', code: 'valid_import' },
   { key: 'with space', code: 'with_32space' },
-  { key: '123 numbers', code: '_4923_32numbers' }
+  { key: '123 numbers', code: '_123_32numbers' }
 ]
 
 describe('genSafeVariableName', () => {
