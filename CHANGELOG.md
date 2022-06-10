@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/unjs/knitwork/compare/v0.1.1...v0.1.2) (2022-06-10)
+
+
+### Features
+
+* add `genSafeVariableName` ([#10](https://github.com/unjs/knitwork/issues/10)) ([c19a2ee](https://github.com/unjs/knitwork/commit/c19a2eeef8b7ec3d30cf79fa85e92251b4800107))
+
 ### [0.1.1](https://github.com/unjs/knitwork/compare/v0.0.2...v0.1.1) (2022-03-08)
 
 
