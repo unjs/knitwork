@@ -6,13 +6,14 @@ const genImportTests = [
   { names: ['foo'], code: 'import { foo } from "pkg";' },
   { names: [{ name: 'foo', as: 'bar' }], code: 'import { foo as bar } from "pkg";' },
   { names: { name: '*', as: 'bar' }, code: 'import * as bar from "pkg";' },
-  { names: [{ name: 'default', as: 'Test' }], code: 'import { default as Test } from "pkg";' }
+  { names: [{ name: 'default', as: 'Test' }], code: 'import { default as Test } from "pkg";' },
+  { names: ['foo'], code: 'import { foo } from "pkg" assert { type: "json" };', options: { assert: { type: 'json' } } }
 ]
 
 describe('genImport', () => {
   for (const t of genImportTests) {
     it(t.code, () => {
-      const code = genImport('pkg', t.names)
+      const code = genImport('pkg', t.names, t.options)
       expect(code).to.equal(t.code)
     })
   }
@@ -23,13 +24,14 @@ const genExportTests = [
   { names: ['foo'], code: 'export { foo } from "pkg";' },
   { names: [{ name: 'foo', as: 'bar' }], code: 'export { foo as bar } from "pkg";' },
   { names: { name: '*', as: 'bar' }, code: 'export * as bar from "pkg";' },
-  { names: ['default'], code: 'export { default } from "pkg";' }
+  { names: ['default'], code: 'export { default } from "pkg";' },
+  { names: ['foo'], code: 'export { foo } from "pkg" assert { type: "json" };', options: { assert: { type: 'json' } } }
 ]
 
 describe('genExport', () => {
   for (const t of genExportTests) {
     it(t.code, () => {
-      const code = genExport('pkg', t.names)
+      const code = genExport('pkg', t.names, t.options)
       expect(code).to.equal(t.code)
     })
   }
@@ -42,7 +44,8 @@ const genDynamicImportTests = [
   {
     opts: { comment: 'webpackChunkName: "chunks/dynamic"' },
     code: '() => import("pkg" /* webpackChunkName: "chunks/dynamic" */)'
-  }
+  },
+  { opts: { assert: { type: 'json' } }, code: '() => import("pkg", { assert: { type: "json" } })' }
 ]
 
 describe('genDynamicImport', () => {

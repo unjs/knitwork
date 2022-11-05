@@ -30,7 +30,8 @@ export function genExport (specifier: string, exports?: ESMExport | ESMExport[],
 }
 
 type ESMImportOrExport = ESMImport | ESMExport
-function _genStatement (type: 'import' | 'export' | 'import type' | 'export type', specifier: string, names?: ESMImportOrExport | ESMImportOrExport[], opts: CodegenOptions = {}) {
+type ImportExportType = 'import' | 'export' | 'import type' | 'export type'
+function _genStatement (type: ImportExportType, specifier: string, names?: ESMImportOrExport | ESMImportOrExport[], opts: CodegenOptions = {}) {
   const specifierStr = genString(specifier, opts)
   if (!names) {
     return `${type} ${specifierStr};`
@@ -48,21 +49,35 @@ function _genStatement (type: 'import' | 'export' | 'import type' | 'export type
 
   const namesStr = _names.map(i => i.as ? `${i.name} as ${i.as}` : i.name).join(', ')
   if (nameArray) {
-    return `${type} { ${namesStr} } from ${genString(specifier, opts)};`
+    return `${type} { ${namesStr} } from ${genString(specifier, opts)}${_getAssertClause(type, opts.assert)};`
   }
-  return `${type} ${namesStr} from ${genString(specifier, opts)};`
+  return `${type} ${namesStr} from ${genString(specifier, opts)}${_getAssertClause(type, opts.assert)};`
+}
+
+function _getAssertClause (type: ImportExportType, assert?: { type: string }) {
+  // import assertions isn't specified type-only import or export on Typescript
+  if (type === 'import type' || type === 'export type') {
+    return ''
+  }
+  return assert ? ` assert { type: ${genString(assert.type)} }` : ''
 }
 
 export interface DynamicImportOptions extends CodegenOptions {
   comment?: string
   wrapper?: boolean
-  interopDefault?: boolean
+  interopDefault?: boolean,
+  // https://github.com/tc39/proposal-import-assertions
+  // https://tc39.es/proposal-import-assertions/
+  assert?: {
+    type: string
+  }
 }
 export function genDynamicImport (specifier: string, opts: DynamicImportOptions = {}) {
   const commentStr = opts.comment ? ` /* ${opts.comment} */` : ''
   const wrapperStr = (opts.wrapper === false) ? '' : '() => '
   const ineropStr = opts.interopDefault ? '.then(m => m.default || m)' : ''
-  return `${wrapperStr}import(${genString(specifier, opts)}${commentStr})${ineropStr}`
+  const assertStr = opts.assert ? `, { assert: { type: ${genString(opts.assert.type)} } }` : ''
+  return `${wrapperStr}import(${genString(specifier, opts)}${commentStr}${assertStr})${ineropStr}`
 }
 
 export function genSafeVariableName (name: string) {

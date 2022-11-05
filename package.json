@@ -29,6 +29,7 @@
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "latest",
     "c8": "latest",
+    "@vitest/coverage-c8": "latest",
     "eslint": "latest",
     "standard-version": "latest",
     "typescript": "latest",
