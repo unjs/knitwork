@@ -49,17 +49,21 @@ function _genStatement (type: ImportExportType, specifier: string, names?: ESMIm
 
   const namesStr = _names.map(i => i.as ? `${i.name} as ${i.as}` : i.name).join(', ')
   if (nameArray) {
-    return `${type} { ${namesStr} } from ${genString(specifier, opts)}${_getAssertClause(type, opts.assert)};`
+    return `${type} { ${namesStr} } from ${genString(specifier, opts)}${_genAssertClause(type, opts.assert)};`
   }
-  return `${type} ${namesStr} from ${genString(specifier, opts)}${_getAssertClause(type, opts.assert)};`
+  return `${type} ${namesStr} from ${genString(specifier, opts)}${_genAssertClause(type, opts.assert)};`
 }
 
-function _getAssertClause (type: ImportExportType, assert?: { type: string }) {
+function _genAssertClause (type: ImportExportType, assert?: { type: string }) {
   // import assertions isn't specified type-only import or export on Typescript
   if (type === 'import type' || type === 'export type') {
     return ''
   }
-  return assert ? ` assert { type: ${genString(assert.type)} }` : ''
+  // currently, `type` only
+  if (!assert || typeof assert !== 'object') {
+    return ''
+  }
+  return ` assert { type: ${genString(assert.type)} }`
 }
 
 export interface DynamicImportOptions extends CodegenOptions {
@@ -76,8 +80,16 @@ export function genDynamicImport (specifier: string, opts: DynamicImportOptions 
   const commentStr = opts.comment ? ` /* ${opts.comment} */` : ''
   const wrapperStr = (opts.wrapper === false) ? '' : '() => '
   const ineropStr = opts.interopDefault ? '.then(m => m.default || m)' : ''
-  const assertStr = opts.assert ? `, { assert: { type: ${genString(opts.assert.type)} } }` : ''
-  return `${wrapperStr}import(${genString(specifier, opts)}${commentStr}${assertStr})${ineropStr}`
+  const optsStr = _genDynamicImportOptions(opts)
+  return `${wrapperStr}import(${genString(specifier, opts)}${commentStr}${optsStr})${ineropStr}`
+}
+
+function _genDynamicImportOptions (opts: DynamicImportOptions = {}) {
+  // currently, `assert` option only
+  const assert = opts.assert
+  return opts.assert && typeof opts.assert === 'object'
+    ? `, { assert: { type: ${genString(assert.type)} } }`
+    : ''
 }
 
 export function genSafeVariableName (name: string) {
