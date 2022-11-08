@@ -86,9 +86,8 @@ export function genDynamicImport (specifier: string, opts: DynamicImportOptions 
 
 function _genDynamicImportOptions (opts: DynamicImportOptions = {}) {
   // currently, `assert` option only
-  const assert = opts.assert
   return opts.assert && typeof opts.assert === 'object'
-    ? `, { assert: { type: ${genString(assert.type)} } }`
+    ? `, { assert: { type: ${genString(opts.assert.type)} } }`
     : ''
 }
 
