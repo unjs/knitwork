@@ -42,6 +42,9 @@ console.log(genImport('pkg', { name: 'foo', as: 'bar' }))
 // import { foo as bar } from "pkg";
 console.log(genImport('pkg', [{ name: 'foo', as: 'bar' }]))
 
+// import foo from "pkg" assert { type: "json" };
+console.log(genImport('pkg', 'foo', { assert: { type: 'json' } }))
+
 // export foo from "pkg"
 console.log(genExport('pkg', 'foo'))
 
@@ -50,6 +53,9 @@ console.log(genExport('pkg', ['a', 'b']))
 
 // export * as bar from "pkg"
 console.log(genExport('pkg', { name: '*', as: 'bar' }))
+
+// export foo from "pkg" assert { type: "json" };
+console.log(genExport('pkg', 'foo', { assert: { type: 'json' } }))
 ```
 
 **Generating TS:**
