@@ -1,6 +1,6 @@
 
-import { genString } from './string'
-import { genObjectKey, wrapInDelimiters } from './utils'
+import { genString } from "./string";
+import { genObjectKey, wrapInDelimiters } from "./utils";
 
 export type TypeObject = {
   [key: string]: string | TypeObject
@@ -10,31 +10,31 @@ export interface GenInterfaceOptions {
   export?: boolean
 }
 
-export const genTypeObject = (obj: TypeObject, indent = '') => {
-  const newIndent = indent + '  '
-  return wrapInDelimiters(Object.entries(obj).map(([key, value]) => {
-    const [, k = key, optional = ''] = key.match(/^(.*[^?])(\?)?$/) /* c8 ignore next */ || []
-    if (typeof value === 'string') {
-      return `${newIndent}${genObjectKey(k)}${optional}: ${value}`
+export const genTypeObject = (object: TypeObject, indent = "") => {
+  const newIndent = indent + "  ";
+  return wrapInDelimiters(Object.entries(object).map(([key, value]) => {
+    const [, k = key, optional = ""] = key.match(/^(.*[^?])(\?)?$/) /* c8 ignore next */ || [];
+    if (typeof value === "string") {
+      return `${newIndent}${genObjectKey(k)}${optional}: ${value}`;
     }
-    return `${newIndent}${genObjectKey(k)}${optional}: ${genTypeObject(value, newIndent)}`
-  }), indent, '{}', false)
-}
+    return `${newIndent}${genObjectKey(k)}${optional}: ${genTypeObject(value, newIndent)}`;
+  }), indent, "{}", false);
+};
 
 export const genInterface = (name: string, contents?: TypeObject, options: GenInterfaceOptions = {}) => {
   const result = [
-    options.export && 'export',
+    options.export && "export",
     `interface ${name}`,
-    options.extends && `extends ${Array.isArray(options.extends) ? options.extends.join(', ') : options.extends}`,
-    contents ? genTypeObject(contents) : '{}'
-  ].filter(Boolean).join(' ')
-  return result
-}
+    options.extends && `extends ${Array.isArray(options.extends) ? options.extends.join(", ") : options.extends}`,
+    contents ? genTypeObject(contents) : "{}"
+  ].filter(Boolean).join(" ");
+  return result;
+};
 
-export const genAugmentation = (specifier: string, interfaces?: Record<string, TypeObject | [TypeObject, Omit<GenInterfaceOptions, 'export'>]>) => {
+export const genAugmentation = (specifier: string, interfaces?: Record<string, TypeObject | [TypeObject, Omit<GenInterfaceOptions, "export">]>) => {
   return `declare module ${genString(specifier)} ${wrapInDelimiters(
     Object.entries(interfaces || {}).map(
-      ([key, entry]) => '  ' + (Array.isArray(entry) ? genInterface(key, ...entry) : genInterface(key, entry))
+      ([key, entry]) => "  " + (Array.isArray(entry) ? genInterface(key, ...entry) : genInterface(key, entry))
     )
-  )}`
-}
+  )}`;
+};
