@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@vitest/coverage-c8": "^0.25.3",
-    "esbuild": "^0.15.16",
+    "esbuild": "^0.15.17",
     "eslint": "latest",
     "eslint-config-unjs": "^0.0.2",
     "standard-version": "^9.5.0",
@@ -37,5 +37,5 @@
     "unbuild": "^0.9.4",
     "vitest": "^0.25.3"
   },
-  "packageManager": "pnpm@7.17.1"
+  "packageManager": "pnpm@7.18.0"
 }
