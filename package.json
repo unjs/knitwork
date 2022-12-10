@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@vitest/coverage-c8": "^0.25.6",
-    "esbuild": "^0.16.3",
+    "esbuild": "^0.16.4",
     "eslint": "latest",
     "eslint-config-unjs": "^0.0.2",
     "standard-version": "^9.5.0",
