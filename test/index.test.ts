@@ -85,6 +85,7 @@ const genObjectFromRawTests = [
       3: "true",
       "obj 1": "{ literal: () => \"test\" }",
       "obj 2": { nested: { foo: "\"bar\"" } },
+      "obj 3": { literal: () => "test", anotherLiteral () { return "test"; } },
       arr: ["1", "2", "3"]
     },
     code: [
@@ -100,6 +101,12 @@ const genObjectFromRawTests = [
       "    nested: {",
       "      foo: \"bar\"",
       "    }",
+      "  },",
+      "  \"obj 3\": {",
+      "    literal: () => \"test\",",
+      "    anotherLiteral: function () {",
+      "        return \"test\";",
+      "      }",
       "  },",
       "  arr: [",
       "    1,",

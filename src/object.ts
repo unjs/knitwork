@@ -29,5 +29,8 @@ function genRawValue (value: unknown, indent = ""): string {
   if (value && typeof value === "object") {
     return genObjectFromRaw(value, indent);
   }
+  if (value && typeof value === "function") {
+    return value.toString().replace(new RegExp(`^${value.name}`), "function ");
+  }
   return value.toString();
 }
