@@ -9,7 +9,7 @@ export interface GenInterfaceOptions {
   export?: boolean;
 }
 
-export const genTypeObject = (object: TypeObject, indent = "") => {
+export const genTypeObject = (object: TypeObject, indent = ""): string => {
   const newIndent = indent + "  ";
   return wrapInDelimiters(
     Object.entries(object).map(([key, value]) => {
