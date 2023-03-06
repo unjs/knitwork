@@ -143,10 +143,11 @@ export function genSafeVariableName(name: string) {
   if (reservedNames.has(name)) {
     return `_${name}`;
   }
-  // eslint-disable-next-line unicorn/prefer-code-point
+  /* eslint-disable unicorn/prefer-code-point */
   return name
     .replace(/^\d/, (r) => `_${r}`)
-    .replace(/\W/g, (r) => "_" + r.codePointAt(0));
+    .replace(/\W/g, (r) => "_" + r.charCodeAt(0));
+  /* eslint-enable unicorn/prefer-code-point */
 }
 
 // Credit: https://mathiasbynens.be/notes/reserved-keywords
