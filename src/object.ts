@@ -34,7 +34,7 @@ export function genObjectFromRawEntries(
 // --- Internals ---
 
 function genRawValue(value: unknown, indent = ""): string {
-  if (value === undefined) {
+  if (typeof value === "undefined" || value === undefined) {
     return "undefined";
   }
   if (value === null) {
