@@ -1,22 +1,39 @@
 import { genObjectKey, wrapInDelimiters } from "./utils";
 
-export function genObjectFromRaw (object: Record<string, any>, indent = ""): string {
+export function genObjectFromRaw(
+  object: Record<string, any>,
+  indent = ""
+): string {
   return genObjectFromRawEntries(Object.entries(object), indent);
 }
 
-export function genArrayFromRaw (array: any[], indent = "") {
+export function genArrayFromRaw(array: any[], indent = "") {
   const newIdent = indent + "  ";
-  return wrapInDelimiters(array.map(index => `${newIdent}${genRawValue(index, newIdent)}`), indent, "[]");
+  return wrapInDelimiters(
+    array.map((index) => `${newIdent}${genRawValue(index, newIdent)}`),
+    indent,
+    "[]"
+  );
 }
 
-export function genObjectFromRawEntries (array: [key: string, value: any][], indent = "") {
+export function genObjectFromRawEntries(
+  array: [key: string, value: any][],
+  indent = ""
+) {
   const newIdent = indent + "  ";
-  return wrapInDelimiters(array.map(([key, value]) => `${newIdent}${genObjectKey(key)}: ${genRawValue(value, newIdent)}`), indent, "{}");
+  return wrapInDelimiters(
+    array.map(
+      ([key, value]) =>
+        `${newIdent}${genObjectKey(key)}: ${genRawValue(value, newIdent)}`
+    ),
+    indent,
+    "{}"
+  );
 }
 
 // --- Internals ---
 
-function genRawValue (value: unknown, indent = ""): string {
+function genRawValue(value: unknown, indent = ""): string {
   if (typeof value === "undefined") {
     return "undefined";
   }

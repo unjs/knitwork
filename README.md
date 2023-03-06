@@ -114,12 +114,13 @@ genSafeVariableName('123 foo')
 genSafeVariableName('for')
 ```
 
-## 💻 Development
+## Development
 
 - Clone this repository
-- Enable [Corepack](https://github.com/nodejs/corepack) using `corepack enable` (use `npm i -g corepack` for Node.js < 16.10)
-- Install dependencies using `pnpm install`
-- Run interactive tests using `pnpm dev`
+- Install latest LTS version of [Node.js](https://nodejs.org/en/)
+- Enable [Corepack](https://github.com/nodejs/corepack) using corepack enable
+- Install dependencies using pnpm install
+- Run interactive tests using pnpm dev
 
 ## License
 
