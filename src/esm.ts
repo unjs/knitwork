@@ -146,7 +146,7 @@ export function genSafeVariableName(name: string) {
   // eslint-disable-next-line unicorn/prefer-code-point
   return name
     .replace(/^\d/, (r) => `_${r}`)
-    .replace(/\W/g, (r) => "_" + r.charCodeAt(0));
+    .replace(/\W/g, (r) => "_" + r.codePointAt(0));
 }
 
 // Credit: https://mathiasbynens.be/notes/reserved-keywords
