@@ -135,7 +135,7 @@ Published under [MIT License](./LICENSE).
 [npm-downloads-src]: https://img.shields.io/npm/dm/knitwork?style=flat-square
 [npm-downloads-href]: https://npmjs.com/package/knitwork
 
-[github-actions-src]: https://img.shields.io/github/workflow/status/unjs/knitwork/ci/main?style=flat-square
+[github-actions-src]: https://img.shields.io/github/actions/workflow/status/unjs/knitwork/ci.yml?branch=main&style=flat-square
 [github-actions-href]: https://github.com/unjs/knitwork/actions?query=workflow%3Aci
 
 [codecov-src]: https://img.shields.io/codecov/c/gh/unjs/knitwork/main?style=flat-square
