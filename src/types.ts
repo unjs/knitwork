@@ -5,4 +5,5 @@ export interface CodegenOptions {
   assert?: {
     type: string;
   };
+  encoding?: "utf8" | "ascii";
 }

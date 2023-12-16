@@ -1,3 +1,4 @@
+import { genBase64FromBytes, genBytesFromBase64 } from "./bytes";
 import type { CodegenOptions } from "./types";
 
 export function genString(input: string, options: CodegenOptions = {}) {
@@ -6,6 +7,26 @@ export function genString(input: string, options: CodegenOptions = {}) {
     return JSON.stringify(input);
   }
   return `'${escapeString(string_)}'`;
+}
+
+export function genBase64FromString(
+  input: string,
+  options: CodegenOptions = {}
+) {
+  if (options.encoding === "utf8") {
+    return genBase64FromBytes(new TextEncoder().encode(input));
+  }
+  return globalThis.btoa(input);
+}
+
+export function genStringFromBase64(
+  input: string,
+  options: CodegenOptions = {}
+) {
+  if (options.encoding === "utf8") {
+    return new TextDecoder().decode(genBytesFromBase64(input));
+  }
+  return globalThis.atob(input);
 }
 
 // https://github.com/rollup/rollup/blob/master/src/utils/escapeId.ts
