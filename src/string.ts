@@ -16,6 +16,12 @@ export function genBase64FromString(
   if (options.encoding === "utf8") {
     return genBase64FromBytes(new TextEncoder().encode(input));
   }
+  if (options.encoding === "url") {
+    return genBase64FromBytes(new TextEncoder().encode(input))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  }
   return globalThis.btoa(input);
 }
 
@@ -24,6 +30,16 @@ export function genStringFromBase64(
   options: CodegenOptions = {}
 ) {
   if (options.encoding === "utf8") {
+    return new TextDecoder().decode(genBytesFromBase64(input));
+  }
+  if (options.encoding === "url") {
+    input = input.replace(/-/g, "+").replace(/_/g, "/");
+    const paddingLength = input.length % 4;
+    if (paddingLength === 2) {
+      input += "==";
+    } else if (paddingLength === 3) {
+      input += "=";
+    }
     return new TextDecoder().decode(genBytesFromBase64(input));
   }
   return globalThis.atob(input);

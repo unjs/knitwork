@@ -12,9 +12,9 @@ import {
   genTypeExport,
   genSafeVariableName,
   genBase64FromString,
-  CodegenOptions,
   genStringFromBase64,
 } from "../src";
+import type { CodegenOptions } from "../src";
 
 const genImportTests = [
   { names: "foo", code: 'import foo from "pkg";' },
@@ -339,6 +339,21 @@ const base64Tests = [
     output: "SGVsbG8sIOaWh/CfpoQh",
     options: { encoding: "utf8" } as CodegenOptions,
   },
+  {
+    input: "??",
+    output: "Pz8",
+    options: { encoding: "url" } as CodegenOptions,
+  },
+  {
+    input: "Hello, World!",
+    output: "SGVsbG8sIFdvcmxkIQ",
+    options: { encoding: "url" } as CodegenOptions,
+  },
+  {
+    input: "Hello, 文🦄!",
+    output: "SGVsbG8sIOaWh_CfpoQh",
+    options: { encoding: "url" } as CodegenOptions,
+  },
 ];
 
 const base64ErrorTests = [
@@ -352,19 +367,19 @@ const base64ErrorTests = [
   },
 ];
 
-describe("base64Tests", () => {
+describe("base64", () => {
   for (const t of base64Tests) {
-    it(`Should convert to Base64: ${t.input}`, () => {
+    it(`${t.options.encoding}: ${t.input}`, () => {
       const output = genBase64FromString(t.input, t.options);
       expect(output).to.equal(t.output);
     });
-    it(`Should convert to string: ${t.output}`, () => {
+    it(`${t.options.encoding}: ${t.output}`, () => {
       const output = genStringFromBase64(t.output, t.options);
       expect(output).to.equal(t.input);
     });
   }
   for (const t of base64ErrorTests) {
-    it(`Should throw with: ${t.input}`, () => {
+    it(`Should throw with ${t.options.encoding}: ${t.input}`, () => {
       expect(() => genBase64FromString(t.input, t.options)).toThrow();
     });
   }
