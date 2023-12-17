@@ -13,8 +13,17 @@ import {
   genSafeVariableName,
   genBase64FromString,
   genStringFromBase64,
+  genBase64FromBytes,
 } from "../src";
 import type { CodegenOptions } from "../src";
+
+function hexStringToArrayBuffer(hexString: string): ArrayBuffer {
+  return new Uint8Array(
+    (hexString.match(/../g) as RegExpMatchArray).map((h) =>
+      Number.parseInt(h, 16)
+    )
+  ).buffer;
+}
 
 const genImportTests = [
   { names: "foo", code: 'import foo from "pkg";' },
@@ -383,4 +392,11 @@ describe("base64", () => {
       expect(() => genBase64FromString(t.input, t.options)).toThrow();
     });
   }
+  it(`Should correctly url encode bytes`, () => {
+    const buffer = hexStringToArrayBuffer(
+      "dcf2aee72183ef8fefba101023af98462c289a6d3da9fa32d5957a9da4f62f52"
+    );
+    const output = genBase64FromBytes(new Uint8Array(buffer), true);
+    expect(output).to.equal("3PKu5yGD74_vuhAQI6-YRiwomm09qfoy1ZV6naT2L1I");
+  });
 });

@@ -5,6 +5,13 @@ export function genBytesFromBase64(input: string) {
   );
 }
 
-export function genBase64FromBytes(input: Uint8Array) {
+export function genBase64FromBytes(input: Uint8Array, urlSafe?: boolean) {
+  if (urlSafe) {
+    return globalThis
+      .btoa(String.fromCodePoint(...input))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  }
   return globalThis.btoa(String.fromCodePoint(...input));
 }
