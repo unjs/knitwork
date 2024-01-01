@@ -349,13 +349,8 @@ const base64Tests = [
     options: { encoding: "utf8" } as CodegenOptions,
   },
   {
-    input: "??",
-    output: "Pz8",
-    options: { encoding: "url" } as CodegenOptions,
-  },
-  {
-    input: "Hello, World!",
-    output: "SGVsbG8sIFdvcmxkIQ",
+    input: "http://+/+=",
+    output: "aHR0cDovLysvKz0",
     options: { encoding: "url" } as CodegenOptions,
   },
   {
