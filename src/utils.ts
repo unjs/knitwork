@@ -15,7 +15,7 @@ export function wrapInDelimiters(
   );
 }
 
-const VALID_IDENTIFIER_RE = /^[$_]?\w*$/;
+const VALID_IDENTIFIER_RE = /^[$_]?([A-Z_a-z]\w*|\d)$/;
 
 export function genObjectKey(key: string) {
   return VALID_IDENTIFIER_RE.test(key) ? key : genString(key);
