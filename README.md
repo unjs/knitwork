@@ -36,8 +36,8 @@ console.log(genImport('pkg', ['foo']))
 // import { a, b } from "pkg"
 console.log(genImport('pkg', ['a', 'b']))
 
-// import foo as bar from "pkg";
-console.log(genImport('pkg', { name: 'foo', as: 'bar' }))
+// import { default as bar } from "pkg";
+console.log(genImport('pkg', [{ name: 'default', as: 'bar' }]))
 
 // import { foo as bar } from "pkg";
 console.log(genImport('pkg', [{ name: 'foo', as: 'bar' }]))
