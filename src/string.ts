@@ -1,11 +1,15 @@
 import type { CodegenOptions } from "./types";
 
 export function genString(input: string, options: CodegenOptions = {}) {
-  const string_ = JSON.stringify(input);
-  if (!options.singleQuotes) {
-    return JSON.stringify(input);
+  const { singleQuotes = false } = options;
+
+  let string_ = JSON.stringify(input);
+  if (singleQuotes) {
+    string_ = escapeString(string_);
+    // JSON.stringify will always use double quotes, so we need to replace them
+    string_ = `'${string_.slice(1, -1)}'`;
   }
-  return `'${escapeString(string_)}'`;
+  return string_;
 }
 
 // https://github.com/rollup/rollup/blob/master/src/utils/escapeId.ts

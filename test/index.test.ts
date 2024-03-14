@@ -17,6 +17,11 @@ const genImportTests = [
   { names: "foo", code: 'import foo from "pkg";' },
   { names: ["foo"], code: 'import { foo } from "pkg";' },
   {
+    names: "foo",
+    code: `import foo from 'pkg';`,
+    options: { singleQuotes: true },
+  },
+  {
     names: [{ name: "foo", as: "bar" }],
     code: 'import { foo as bar } from "pkg";',
   },
