@@ -11,7 +11,19 @@ import {
   genTypeImport,
   genTypeExport,
   genSafeVariableName,
+  genBase64FromString,
+  genStringFromBase64,
+  genBase64FromBytes,
 } from "../src";
+import type { CodegenOptions } from "../src";
+
+function hexStringToArrayBuffer(hexString: string): ArrayBuffer {
+  return new Uint8Array(
+    (hexString.match(/../g) as RegExpMatchArray).map((h) =>
+      Number.parseInt(h, 16)
+    )
+  ).buffer;
+}
 
 const genImportTests = [
   { names: "foo", code: 'import foo from "pkg";' },
@@ -307,4 +319,83 @@ describe("genTypeExport", () => {
       expect(code).to.equal(t.code);
     });
   }
+});
+
+const base64Tests = [
+  {
+    input: "Hello, World!",
+    output: "SGVsbG8sIFdvcmxkIQ==",
+    options: { encoding: "ascii" } as CodegenOptions,
+  },
+  {
+    input: "",
+    output: "",
+    options: { encoding: "ascii" } as CodegenOptions,
+  },
+  {
+    input: "!@#$%^&*()",
+    output: "IUAjJCVeJiooKQ==",
+    options: { encoding: "ascii" } as CodegenOptions,
+  },
+  {
+    input: "文",
+    output: "5paH",
+    options: { encoding: "utf8" } as CodegenOptions,
+  },
+  {
+    input: "🦄",
+    output: "8J+mhA==",
+    options: { encoding: "utf8" } as CodegenOptions,
+  },
+  {
+    input: "Hello, 文🦄!",
+    output: "SGVsbG8sIOaWh/CfpoQh",
+    options: { encoding: "utf8" } as CodegenOptions,
+  },
+  {
+    input: "http://+/+=",
+    output: "aHR0cDovLysvKz0",
+    options: { encoding: "url" } as CodegenOptions,
+  },
+  {
+    input: "Hello, 文🦄!",
+    output: "SGVsbG8sIOaWh_CfpoQh",
+    options: { encoding: "url" } as CodegenOptions,
+  },
+];
+
+const base64ErrorTests = [
+  {
+    input: "🦄",
+    options: { encoding: "ascii" } as CodegenOptions,
+  },
+  {
+    input: "文",
+    options: { encoding: "ascii" } as CodegenOptions,
+  },
+];
+
+describe("base64", () => {
+  for (const t of base64Tests) {
+    it(`${t.options.encoding}: ${t.input}`, () => {
+      const output = genBase64FromString(t.input, t.options);
+      expect(output).to.equal(t.output);
+    });
+    it(`${t.options.encoding}: ${t.output}`, () => {
+      const output = genStringFromBase64(t.output, t.options);
+      expect(output).to.equal(t.input);
+    });
+  }
+  for (const t of base64ErrorTests) {
+    it(`Should throw with ${t.options.encoding}: ${t.input}`, () => {
+      expect(() => genBase64FromString(t.input, t.options)).toThrow();
+    });
+  }
+  it(`Should correctly url encode bytes`, () => {
+    const buffer = hexStringToArrayBuffer(
+      "dcf2aee72183ef8fefba101023af98462c289a6d3da9fa32d5957a9da4f62f52"
+    );
+    const output = genBase64FromBytes(new Uint8Array(buffer), true);
+    expect(output).to.equal("3PKu5yGD74_vuhAQI6-YRiwomm09qfoy1ZV6naT2L1I");
+  });
 });
