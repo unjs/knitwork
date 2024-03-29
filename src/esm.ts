@@ -8,7 +8,7 @@ export type ESMImport = string | { name: string; as?: string };
 export function genImport(
   specifier: string,
   imports?: ESMImport | ESMImport[],
-  options: CodegenOptions = {}
+  options: CodegenOptions = {},
 ) {
   return _genStatement("import", specifier, imports, options);
 }
@@ -16,7 +16,7 @@ export function genImport(
 export function genTypeImport(
   specifier: string,
   imports: ESMImport[],
-  options: CodegenOptions = {}
+  options: CodegenOptions = {},
 ) {
   return _genStatement("import type", specifier, imports, options);
 }
@@ -24,7 +24,7 @@ export function genTypeImport(
 export function genTypeExport(
   specifier: string,
   imports: ESMImport[],
-  options: CodegenOptions = {}
+  options: CodegenOptions = {},
 ) {
   return _genStatement("export type", specifier, imports, options);
 }
@@ -32,7 +32,7 @@ export function genTypeExport(
 export const genInlineTypeImport = (
   specifier: string,
   name = "default",
-  options: CodegenOptions = {}
+  options: CodegenOptions = {},
 ) => {
   return `typeof ${genDynamicImport(specifier, {
     ...options,
@@ -47,7 +47,7 @@ export type ESMExport = string | { name: string; as?: string };
 export function genExport(
   specifier: string,
   exports?: ESMExport | ESMExport[],
-  options: CodegenOptions = {}
+  options: CodegenOptions = {},
 ) {
   return _genStatement("export", specifier, exports, options);
 }
@@ -58,7 +58,7 @@ function _genStatement(
   type: ImportExportType,
   specifier: string,
   names?: ESMImportOrExport | ESMImportOrExport[],
-  options: CodegenOptions = {}
+  options: CodegenOptions = {},
 ) {
   const specifierString = genString(specifier, options);
   if (!names) {
@@ -85,12 +85,12 @@ function _genStatement(
   if (nameArray) {
     return `${type} { ${namesString} } from ${genString(
       specifier,
-      options
+      options,
     )}${_genAssertClause(type, options.assert)};`;
   }
   return `${type} ${namesString} from ${genString(
     specifier,
-    options
+    options,
   )}${_genAssertClause(type, options.assert)};`;
 }
 
@@ -118,7 +118,7 @@ export interface DynamicImportOptions extends CodegenOptions {
 }
 export function genDynamicImport(
   specifier: string,
-  options: DynamicImportOptions = {}
+  options: DynamicImportOptions = {},
 ) {
   const commentString = options.comment ? ` /* ${options.comment} */` : "";
   const wrapperString = options.wrapper === false ? "" : "() => ";
@@ -128,7 +128,7 @@ export function genDynamicImport(
   const optionsString = _genDynamicImportOptions(options);
   return `${wrapperString}import(${genString(
     specifier,
-    options
+    options,
   )}${commentString}${optionsString})${ineropString}`;
 }
 

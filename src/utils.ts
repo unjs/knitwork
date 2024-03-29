@@ -4,7 +4,7 @@ export function wrapInDelimiters(
   lines: string[],
   indent = "",
   delimiters = "{}",
-  withComma = true
+  withComma = true,
 ) {
   if (lines.length === 0) {
     return delimiters;
