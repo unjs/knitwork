@@ -1,5 +1,4 @@
 {
-  "extends": [
-    "@nuxtjs/eslint-config-typescript"
-  ]
+  "extends": ["eslint-config-unjs"],
+  "rules": {}
 }

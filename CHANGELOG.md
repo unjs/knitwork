@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/unjs/knitwork/compare/v0.1.3...v1.0.0) (2022-11-14)
+
+### [0.1.3](https://github.com/unjs/knitwork/compare/v0.1.2...v0.1.3) (2022-11-11)
+
+
+### Features
+
+* import assertions for `genImport` and `genDynamicImport` ([#34](https://github.com/unjs/knitwork/issues/34)) ([71c4ad2](https://github.com/unjs/knitwork/commit/71c4ad2155fdf28d08d339ee10620109c12b4baf))
+
+### [0.1.2](https://github.com/unjs/knitwork/compare/v0.1.1...v0.1.2) (2022-06-10)
+
+
+### Features
+
+* add `genSafeVariableName` ([#10](https://github.com/unjs/knitwork/issues/10)) ([c19a2ee](https://github.com/unjs/knitwork/commit/c19a2eeef8b7ec3d30cf79fa85e92251b4800107))
+
 ### [0.1.1](https://github.com/unjs/knitwork/compare/v0.0.2...v0.1.1) (2022-03-08)
 
 
