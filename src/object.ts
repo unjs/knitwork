@@ -2,7 +2,7 @@ import { genObjectKey, wrapInDelimiters } from "./utils";
 
 export function genObjectFromRaw(
   object: Record<string, any>,
-  indent = ""
+  indent = "",
 ): string {
   return genObjectFromRawEntries(Object.entries(object), indent);
 }
@@ -12,29 +12,29 @@ export function genArrayFromRaw(array: any[], indent = "") {
   return wrapInDelimiters(
     array.map((index) => `${newIdent}${genRawValue(index, newIdent)}`),
     indent,
-    "[]"
+    "[]",
   );
 }
 
 export function genObjectFromRawEntries(
   array: [key: string, value: any][],
-  indent = ""
+  indent = "",
 ) {
   const newIdent = indent + "  ";
   return wrapInDelimiters(
     array.map(
       ([key, value]) =>
-        `${newIdent}${genObjectKey(key)}: ${genRawValue(value, newIdent)}`
+        `${newIdent}${genObjectKey(key)}: ${genRawValue(value, newIdent)}`,
     ),
     indent,
-    "{}"
+    "{}",
   );
 }
 
 // --- Internals ---
 
 function genRawValue(value: unknown, indent = ""): string {
-  if (typeof value === "undefined" || value === undefined) {
+  if (value === undefined) {
     return "undefined";
   }
   if (value === null) {
