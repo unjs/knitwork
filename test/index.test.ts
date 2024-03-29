@@ -320,6 +320,7 @@ const genObjectFromValuesTests = [
   {
     obj: {
       a: 'null',
+      // eslint-disable-next-line unicorn/no-null
       b: null,
       c: undefined,
       1: 'undefined',
