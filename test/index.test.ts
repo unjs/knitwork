@@ -315,50 +315,49 @@ describe("genTypeExport", () => {
   }
 });
 
-
 const genObjectFromValuesTests = [
   {
     obj: {
-      a: 'null',
+      a: "null",
       // eslint-disable-next-line unicorn/no-null
       b: null,
       c: undefined,
-      1: 'undefined',
+      1: "undefined",
       2: true,
-      3: 'true',
-      'obj 1': '{ literal: () => "test" }',
-      'obj 2': { nested: { foo: 'bar' } },
-      arr: ['1', '2', 3]
+      3: "true",
+      "obj 1": '{ literal: () => "test" }',
+      "obj 2": { nested: { foo: "bar" } },
+      arr: ["1", "2", 3],
     },
     code: [
-      '{',
+      "{",
       '  1: "undefined",',
-      '  2: true,',
+      "  2: true,",
       '  3: "true",',
       '  a: "null",',
-      '  b: null,',
-      '  c: undefined,',
+      "  b: null,",
+      "  c: undefined,",
       '  "obj 1": "{ literal: () => \\"test\\" }",',
       '  "obj 2": {',
-      '    nested: {',
+      "    nested: {",
       '      foo: "bar"',
-      '    }',
-      '  },',
-      '  arr: [',
+      "    }",
+      "  },",
+      "  arr: [",
       '    "1",',
       '    "2",',
-      '    3',
-      '  ]',
-      '}'
-    ].join('\n')
-  }
-]
+      "    3",
+      "  ]",
+      "}",
+    ].join("\n"),
+  },
+];
 
-describe('genObjectFromValues', () => {
+describe("genObjectFromValues", () => {
   for (const t of genObjectFromValuesTests) {
     it(t.code, () => {
-      const code = genObjectFromValues(t.obj)
-      expect(code).to.equal(t.code)
-    })
+      const code = genObjectFromValues(t.obj);
+      expect(code).to.equal(t.code);
+    });
   }
-})
+});

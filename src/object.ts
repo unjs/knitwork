@@ -1,7 +1,10 @@
 import { genObjectKey, wrapInDelimiters } from "./utils";
 
-export function genObjectFromValues (obj: Record<string, any>, indent = ''): string {
-  return genObjectFromRaw(obj, indent, true)
+export function genObjectFromValues(
+  obj: Record<string, any>,
+  indent = "",
+): string {
+  return genObjectFromRaw(obj, indent, true);
 }
 
 export function genObjectFromRaw(
@@ -12,10 +15,16 @@ export function genObjectFromRaw(
   return genObjectFromRawEntries(Object.entries(object), indent, preserveTypes);
 }
 
-export function genArrayFromRaw(array: any[], indent = "", preserveTypes = false) {
+export function genArrayFromRaw(
+  array: any[],
+  indent = "",
+  preserveTypes = false,
+) {
   const newIdent = indent + "  ";
   return wrapInDelimiters(
-    array.map((index) => `${newIdent}${genRawValue(index, newIdent, preserveTypes)}`),
+    array.map(
+      (index) => `${newIdent}${genRawValue(index, newIdent, preserveTypes)}`,
+    ),
     indent,
     "[]",
   );
@@ -39,7 +48,11 @@ export function genObjectFromRawEntries(
 
 // --- Internals ---
 
-function genRawValue(value: unknown, indent = "", preserveTypes = false): string {
+function genRawValue(
+  value: unknown,
+  indent = "",
+  preserveTypes = false,
+): string {
   if (value === undefined) {
     return "undefined";
   }
@@ -52,8 +65,8 @@ function genRawValue(value: unknown, indent = "", preserveTypes = false): string
   if (value && typeof value === "object") {
     return genObjectFromRaw(value, indent, preserveTypes);
   }
-  if (preserveTypes && typeof value !== 'function') {
-    return JSON.stringify(value)
+  if (preserveTypes && typeof value !== "function") {
+    return JSON.stringify(value);
   }
   return value.toString();
 }
