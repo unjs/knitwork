@@ -12,6 +12,12 @@ export interface ESMCodeGenOptions extends CodegenOptions {
   assert?: { type: string };
 }
 
+export interface DynamicImportOptions extends ESMCodeGenOptions {
+  comment?: string;
+  wrapper?: boolean;
+  interopDefault?: boolean;
+}
+
 export function genImport(
   specifier: string,
   imports?: ESMImport | ESMImport[],
@@ -122,11 +128,6 @@ function _genImportAttributes(
   return "";
 }
 
-export interface DynamicImportOptions extends ESMCodeGenOptions {
-  comment?: string;
-  wrapper?: boolean;
-  interopDefault?: boolean;
-}
 export function genDynamicImport(
   specifier: string,
   options: DynamicImportOptions = {},
