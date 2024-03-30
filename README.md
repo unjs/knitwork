@@ -1,15 +1,23 @@
 # 🧶 knitwork
 
-[![npm version][npm-version-src]][npm-version-href]
-[![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![Github Actions][github-actions-src]][github-actions-href]
-[![Codecov][codecov-src]][codecov-href]
+<!-- automd:badges color=yellow codecov -->
 
-> Utilities to generate JavaScript code.
+[![npm version](https://img.shields.io/npm/v/knitwork?color=yellow)](https://npmjs.com/package/knitwork)
+[![npm downloads](https://img.shields.io/npm/dm/knitwork?color=yellow)](https://npmjs.com/package/knitwork)
+[![codecov](https://img.shields.io/codecov/c/gh/unjs/knitwork?color=yellow)](https://codecov.io/gh/unjs/knitwork)
+
+<!-- /automd -->
+
+Utilities to generate JavaScript code.
 
 ## Install
 
+<!-- automd:pm-install -->
+
 ```sh
+# ✨ Auto-detect
+npx nypm install knitwork
+
 # npm
 npm install knitwork
 
@@ -18,128 +26,159 @@ yarn add knitwork
 
 # pnpm
 pnpm install knitwork
+
+# bun
+bun install knitwork
 ```
+
+<!-- /automd -->
 
 ## Usage
 
 **Generating ESM syntax:**
 
 ```js
-import { genImport, genExport } from 'knitwork'
+import { genImport, genExport } from "knitwork";
 
 // import foo from "pkg"
-console.log(genImport('pkg', 'foo'))
+console.log(genImport("pkg", "foo"));
 
 // import { foo } from "pkg"
-console.log(genImport('pkg', ['foo']))
+console.log(genImport("pkg", ["foo"]));
 
 // import { a, b } from "pkg"
-console.log(genImport('pkg', ['a', 'b']))
+console.log(genImport("pkg", ["a", "b"]));
 
 // import { default as bar } from "pkg";
-console.log(genImport('pkg', [{ name: 'default', as: 'bar' }]))
+console.log(genImport("pkg", [{ name: "default", as: "bar" }]));
 
 // import { foo as bar } from "pkg";
-console.log(genImport('pkg', [{ name: 'foo', as: 'bar' }]))
+console.log(genImport("pkg", [{ name: "foo", as: "bar" }]));
 
 // import foo from "pkg" assert { type: "json" };
-console.log(genImport('pkg', 'foo', { assert: { type: 'json' } }))
+console.log(genImport("pkg", "foo", { assert: { type: "json" } }));
 
 // export foo from "pkg"
-console.log(genExport('pkg', 'foo'))
+console.log(genExport("pkg", "foo"));
 
 // export { a, b } from "pkg"
-console.log(genExport('pkg', ['a', 'b']))
+console.log(genExport("pkg", ["a", "b"]));
 
 // export * as bar from "pkg"
-console.log(genExport('pkg', { name: '*', as: 'bar' }))
+console.log(genExport("pkg", { name: "*", as: "bar" }));
 
 // export foo from "pkg" assert { type: "json" };
-console.log(genExport('pkg', 'foo', { assert: { type: 'json' } }))
+console.log(genExport("pkg", "foo", { assert: { type: "json" } }));
 ```
 
 **Generating TS:**
 
 ```js
-import { genInterface, genAugmentation, genInlineTypeImport, genTypeImport, genTypeExport } from 'knitwork'
+import {
+  genInterface,
+  genAugmentation,
+  genInlineTypeImport,
+  genTypeImport,
+  genTypeExport,
+} from "knitwork";
 
 // interface FooInterface extends A, B {
 //   name: boolean
 //   optional?: string
 // }
-console.log(genInterface('FooInterface', { name: 'boolean', 'optional?': 'string' }, { extends: ['A', 'B'] }))
+console.log(
+  genInterface(
+    "FooInterface",
+    { name: "boolean", "optional?": "string" },
+    { extends: ["A", "B"] },
+  ),
+);
 // declare module "my-module" {
 //   interface MyInterface {}
 // }
-console.log(genAugmentation('my-module', { MyInterface: {} }))
+console.log(genAugmentation("my-module", { MyInterface: {} }));
 // typeof import("my-module").genString'
-console.log(genInlineTypeImport('my-module', 'genString'))
+console.log(genInlineTypeImport("my-module", "genString"));
 // typeof import("my-module").default'
-console.log(genInlineTypeImport('my-module'))
+console.log(genInlineTypeImport("my-module"));
 // import type { test as value } from "my-module";
-console.log(genTypeImport('my-module', [{ name: 'test', as: 'value' }]))
+console.log(genTypeImport("my-module", [{ name: "test", as: "value" }]));
 // export type { test } from "my-module";
-console.log(genTypeExport('my-module', ['test']))
+console.log(genTypeExport("my-module", ["test"]));
 ```
 
 **Serializing JS objects:**
 
 ```js
-import { genObjectFromRaw, genObjectFromRawEntries, genArrayFromRaw } from 'knitwork'
+import {
+  genObjectFromRaw,
+  genObjectFromRawEntries,
+  genArrayFromRaw,
+} from "knitwork";
 
 // { foo: 'bar', test: () => import("pkg") }
-console.log(genObjectFromValues({ foo: 'bar', test: '() => import("pkg")' }))
+console.log(genObjectFromValues({ foo: "bar", test: '() => import("pkg")' }));
 
 // { test: () => import("pkg") }
-console.log(genObjectFromRaw({ test: '() => import("pkg")' }))
+console.log(genObjectFromRaw({ test: '() => import("pkg")' }));
 
 // { 0: [ test, () => import("pkg") ] }
-console.log(genObjectFromRaw([ ['test', '() => import("pkg")'] ]))
+console.log(genObjectFromRaw([["test", '() => import("pkg")']]));
 
 const entries = Object.entries({
-  a: 1, b: null, c: '"c"', nest: { hello: '"world"', fn: () => 1 }
-})
+  a: 1,
+  b: null,
+  c: '"c"',
+  nest: { hello: '"world"', fn: () => 1 },
+});
 // { a: 1, b: null, c: "c", nest: { hello: "world", fn: () => 1 } }
-console.log(genObjectFromRawEntries(entries))
+console.log(genObjectFromRawEntries(entries));
 
 // [ 1, 2, () => import("pkg") ]
-console.log(genArrayFromRaw(['1', '2', '() => import("pkg")']))
+console.log(genArrayFromRaw(["1", "2", '() => import("pkg")']));
 ```
 
 **Generating safe variable names:**
 
 ```js
-import { genSafeVariableName } from 'knitwork'
+import { genSafeVariableName } from "knitwork";
 
 // _123_32foo
-genSafeVariableName('123 foo')
+genSafeVariableName("123 foo");
 // _for
-genSafeVariableName('for')
+genSafeVariableName("for");
 ```
 
-## Development
+## Contribution
+
+<details>
+  <summary>Local development</summary>
 
 - Clone this repository
-- Install latest LTS version of [Node.js](https://nodejs.org/en/)
-- Enable [Corepack](https://github.com/nodejs/corepack) using corepack enable
-- Install dependencies using pnpm install
-- Run interactive tests using pnpm dev
+- Install the latest LTS version of [Node.js](https://nodejs.org/en/)
+- Enable [Corepack](https://github.com/nodejs/corepack) using `corepack enable`
+- Install dependencies using `bun install`
+- Run tests using `bun dev`
+
+</details>
 
 ## License
 
-Made with 💛
+<!-- automd:contributors license=MIT author="pi0,danielroe" -->
 
-Published under [MIT License](./LICENSE).
+Published under the [MIT](https://github.com/unjs/knitwork/blob/main/LICENSE) license.
+Made by [@pi0](https://github.com/pi0), [@danielroe](https://github.com/danielroe) and [community](https://github.com/unjs/knitwork/graphs/contributors) 💛
+<br><br>
+<a href="https://github.com/unjs/knitwork/graphs/contributors">
+<img src="https://contrib.rocks/image?repo=unjs/knitwork" />
+</a>
 
-<!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/knitwork?style=flat-square
-[npm-version-href]: https://npmjs.com/package/knitwork
+<!-- /automd -->
 
-[npm-downloads-src]: https://img.shields.io/npm/dm/knitwork?style=flat-square
-[npm-downloads-href]: https://npmjs.com/package/knitwork
+<!-- automd:with-automd -->
 
-[github-actions-src]: https://img.shields.io/github/actions/workflow/status/unjs/knitwork/ci.yml?branch=main&style=flat-square
-[github-actions-href]: https://github.com/unjs/knitwork/actions?query=workflow%3Aci
+---
 
-[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/knitwork/main?style=flat-square
-[codecov-href]: https://codecov.io/gh/unjs/knitwork
+_🤖 auto updated with [automd](https://automd.unjs.io)_
+
+<!-- /automd -->
