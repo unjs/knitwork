@@ -74,6 +74,7 @@ export function genInterface(
   name: string,
   contents?: TypeObject,
   options: GenInterfaceOptions = {},
+  indent = "",
 ): string {
   const result = [
     options.export && "export",
@@ -84,7 +85,7 @@ export function genInterface(
           ? options.extends.join(", ")
           : options.extends
       }`,
-    contents ? genTypeObject(contents) : "{}",
+    contents ? genTypeObject(contents, indent) : "{}",
   ]
     .filter(Boolean)
     .join(" ");
@@ -109,7 +110,7 @@ export function genAugmentation(
         "  " +
         (Array.isArray(entry)
           ? genInterface(key, ...entry)
-          : genInterface(key, entry)),
+          : genInterface(key, entry, {}, "  ")),
     ),
   )}`;
 }
