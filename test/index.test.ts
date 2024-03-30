@@ -11,6 +11,7 @@ import {
   genTypeImport,
   genTypeExport,
   genSafeVariableName,
+  genObjectFromValues,
 } from "../src";
 
 const genImportTests = [
@@ -309,6 +310,53 @@ describe("genTypeExport", () => {
   for (const t of genTypeExportTests) {
     it(t.code, () => {
       const code = genTypeExport(...t.input);
+      expect(code).to.equal(t.code);
+    });
+  }
+});
+
+const genObjectFromValuesTests = [
+  {
+    obj: {
+      a: "null",
+      // eslint-disable-next-line unicorn/no-null
+      b: null,
+      c: undefined,
+      1: "undefined",
+      2: true,
+      3: "true",
+      "obj 1": '{ literal: () => "test" }',
+      "obj 2": { nested: { foo: "bar" } },
+      arr: ["1", "2", 3],
+    },
+    code: [
+      "{",
+      '  1: "undefined",',
+      "  2: true,",
+      '  3: "true",',
+      '  a: "null",',
+      "  b: null,",
+      "  c: undefined,",
+      '  "obj 1": "{ literal: () => \\"test\\" }",',
+      '  "obj 2": {',
+      "    nested: {",
+      '      foo: "bar"',
+      "    }",
+      "  },",
+      "  arr: [",
+      '    "1",',
+      '    "2",',
+      "    3",
+      "  ]",
+      "}",
+    ].join("\n"),
+  },
+];
+
+describe("genObjectFromValues", () => {
+  for (const t of genObjectFromValuesTests) {
+    it(t.code, () => {
+      const code = genObjectFromValues(t.obj);
       expect(code).to.equal(t.code);
     });
   }
