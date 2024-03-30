@@ -7,9 +7,9 @@ export type ESMImport = string | { name: string; as?: string };
 export interface ESMCodeGenOptions extends CodegenOptions {
   // https://github.com/tc39/proposal-import-attributes
   // https://nodejs.org/api/esm.html#import-attributes
-  attributes?: { type: string; };
+  attributes?: { type: string };
   /** @deprecated use attributes */
-  assert?: { type: string; };
+  assert?: { type: string };
 }
 
 export function genImport(
@@ -101,18 +101,21 @@ function _genStatement(
   )}${_genImportAttributes(type, options)};`;
 }
 
-function _genImportAttributes(type: ImportExportType, options: ESMCodeGenOptions) {
+function _genImportAttributes(
+  type: ImportExportType,
+  options: ESMCodeGenOptions,
+) {
   // import assertions isn't specified type-only import or export on Typescript
   if (type === "import type" || type === "export type") {
     return "";
   }
 
-  if (typeof options.attributes?.type === 'string') {
+  if (typeof options.attributes?.type === "string") {
     return ` with { type: ${genString(options.attributes.type)} }`;
   }
 
   // TODO: Remove deprecated `assert` in the next major release
-  if (typeof options.assert?.type === 'string') {
+  if (typeof options.assert?.type === "string") {
     return ` assert { type: ${genString(options.assert.type)} }`;
   }
 
@@ -142,11 +145,11 @@ export function genDynamicImport(
 
 function _genDynamicImportAttributes(options: DynamicImportOptions = {}) {
   // TODO: Remove deprecated `assert` in the next major release
-  if (typeof options.assert?.type === 'string') {
+  if (typeof options.assert?.type === "string") {
     return `, { assert: { type: ${genString(options.assert.type)} } }`;
   }
 
-  if (typeof options.attributes?.type === 'string') {
+  if (typeof options.attributes?.type === "string") {
     return `, { with: { type: ${genString(options.attributes.type)} } }`;
   }
 
