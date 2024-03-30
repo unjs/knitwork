@@ -2,13 +2,20 @@ import { CodegenOptions } from "./types";
 import { genString } from "./string";
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
-// https://tc39.es/ecma262/multipage/ecmascript-language-scripts-and-modules.html#sec-imports
 export type ESMImport = string | { name: string; as?: string };
+
+export interface ESMCodeGenOptions extends CodegenOptions {
+  // https://github.com/tc39/proposal-import-attributes
+  // https://nodejs.org/api/esm.html#import-attributes
+  attributes?: { type: string; };
+  /** @deprecated use attributes */
+  assert?: { type: string; };
+}
 
 export function genImport(
   specifier: string,
   imports?: ESMImport | ESMImport[],
-  options: CodegenOptions = {},
+  options: ESMCodeGenOptions = {},
 ) {
   return _genStatement("import", specifier, imports, options);
 }
@@ -16,7 +23,7 @@ export function genImport(
 export function genTypeImport(
   specifier: string,
   imports: ESMImport[],
-  options: CodegenOptions = {},
+  options: ESMCodeGenOptions = {},
 ) {
   return _genStatement("import type", specifier, imports, options);
 }
@@ -24,7 +31,7 @@ export function genTypeImport(
 export function genTypeExport(
   specifier: string,
   imports: ESMImport[],
-  options: CodegenOptions = {},
+  options: ESMCodeGenOptions = {},
 ) {
   return _genStatement("export type", specifier, imports, options);
 }
@@ -32,7 +39,7 @@ export function genTypeExport(
 export const genInlineTypeImport = (
   specifier: string,
   name = "default",
-  options: CodegenOptions = {},
+  options: ESMCodeGenOptions = {},
 ) => {
   return `typeof ${genDynamicImport(specifier, {
     ...options,
@@ -47,7 +54,7 @@ export type ESMExport = string | { name: string; as?: string };
 export function genExport(
   specifier: string,
   exports?: ESMExport | ESMExport[],
-  options: CodegenOptions = {},
+  options: ESMCodeGenOptions = {},
 ) {
   return _genStatement("export", specifier, exports, options);
 }
@@ -58,7 +65,7 @@ function _genStatement(
   type: ImportExportType,
   specifier: string,
   names?: ESMImportOrExport | ESMImportOrExport[],
-  options: CodegenOptions = {},
+  options: ESMCodeGenOptions = {},
 ) {
   const specifierString = genString(specifier, options);
   if (!names) {
@@ -86,35 +93,36 @@ function _genStatement(
     return `${type} { ${namesString} } from ${genString(
       specifier,
       options,
-    )}${_genAssertClause(type, options.assert)};`;
+    )}${_genImportAttributes(type, options)};`;
   }
   return `${type} ${namesString} from ${genString(
     specifier,
     options,
-  )}${_genAssertClause(type, options.assert)};`;
+  )}${_genImportAttributes(type, options)};`;
 }
 
-function _genAssertClause(type: ImportExportType, assert?: { type: string }) {
+function _genImportAttributes(type: ImportExportType, options: ESMCodeGenOptions) {
   // import assertions isn't specified type-only import or export on Typescript
   if (type === "import type" || type === "export type") {
     return "";
   }
-  // currently, `type` only
-  if (!assert || typeof assert !== "object") {
-    return "";
+
+  if (typeof options.attributes?.type === 'string') {
+    return ` with { type: ${genString(options.attributes.type)} }`;
   }
-  return ` assert { type: ${genString(assert.type)} }`;
+
+  // TODO: Remove deprecated `assert` in the next major release
+  if (typeof options.assert?.type === 'string') {
+    return ` assert { type: ${genString(options.assert.type)} }`;
+  }
+
+  return "";
 }
 
-export interface DynamicImportOptions extends CodegenOptions {
+export interface DynamicImportOptions extends ESMCodeGenOptions {
   comment?: string;
   wrapper?: boolean;
   interopDefault?: boolean;
-  // https://github.com/tc39/proposal-import-assertions
-  // https://tc39.es/proposal-import-assertions/
-  assert?: {
-    type: string;
-  };
 }
 export function genDynamicImport(
   specifier: string,
@@ -125,18 +133,24 @@ export function genDynamicImport(
   const ineropString = options.interopDefault
     ? ".then(m => m.default || m)"
     : "";
-  const optionsString = _genDynamicImportOptions(options);
+  const optionsString = _genDynamicImportAttributes(options);
   return `${wrapperString}import(${genString(
     specifier,
     options,
   )}${commentString}${optionsString})${ineropString}`;
 }
 
-function _genDynamicImportOptions(options: DynamicImportOptions = {}) {
-  // currently, `assert` option only
-  return options.assert && typeof options.assert === "object"
-    ? `, { assert: { type: ${genString(options.assert.type)} } }`
-    : "";
+function _genDynamicImportAttributes(options: DynamicImportOptions = {}) {
+  // TODO: Remove deprecated `assert` in the next major release
+  if (typeof options.assert?.type === 'string') {
+    return `, { assert: { type: ${genString(options.assert.type)} } }`;
+  }
+
+  if (typeof options.attributes?.type === 'string') {
+    return `, { with: { type: ${genString(options.attributes.type)} } }`;
+  }
+
+  return "";
 }
 
 export function genSafeVariableName(name: string) {
