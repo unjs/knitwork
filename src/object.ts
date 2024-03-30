@@ -1,30 +1,34 @@
+import type { CodegenOptions } from "./types";
 import { genObjectKey, wrapInDelimiters } from "./utils";
+
+export interface GenObjectOptions extends CodegenOptions {
+  preserveTypes?: boolean;
+}
 
 export function genObjectFromValues(
   obj: Record<string, any>,
   indent = "",
+  options: GenObjectOptions = {},
 ): string {
-  return genObjectFromRaw(obj, indent, true);
+  return genObjectFromRaw(obj, indent, { preserveTypes: true, ...options });
 }
 
 export function genObjectFromRaw(
   object: Record<string, any>,
   indent = "",
-  preserveTypes = false,
+  options: GenObjectOptions = {},
 ): string {
-  return genObjectFromRawEntries(Object.entries(object), indent, preserveTypes);
+  return genObjectFromRawEntries(Object.entries(object), indent, options);
 }
 
 export function genArrayFromRaw(
   array: any[],
   indent = "",
-  preserveTypes = false,
+  options: GenObjectOptions = {},
 ) {
   const newIdent = indent + "  ";
   return wrapInDelimiters(
-    array.map(
-      (index) => `${newIdent}${genRawValue(index, newIdent, preserveTypes)}`,
-    ),
+    array.map((index) => `${newIdent}${genRawValue(index, newIdent, options)}`),
     indent,
     "[]",
   );
@@ -33,13 +37,13 @@ export function genArrayFromRaw(
 export function genObjectFromRawEntries(
   array: [key: string, value: any][],
   indent = "",
-  preserveTypes = false,
+  options: GenObjectOptions = {},
 ) {
   const newIdent = indent + "  ";
   return wrapInDelimiters(
     array.map(
       ([key, value]) =>
-        `${newIdent}${genObjectKey(key)}: ${genRawValue(value, newIdent, preserveTypes)}`,
+        `${newIdent}${genObjectKey(key)}: ${genRawValue(value, newIdent, options)}`,
     ),
     indent,
     "{}",
@@ -51,7 +55,7 @@ export function genObjectFromRawEntries(
 function genRawValue(
   value: unknown,
   indent = "",
-  preserveTypes = false,
+  options: GenObjectOptions = {},
 ): string {
   if (value === undefined) {
     return "undefined";
@@ -60,12 +64,12 @@ function genRawValue(
     return "null";
   }
   if (Array.isArray(value)) {
-    return genArrayFromRaw(value, indent, preserveTypes);
+    return genArrayFromRaw(value, indent, options);
   }
   if (value && typeof value === "object") {
-    return genObjectFromRaw(value, indent, preserveTypes);
+    return genObjectFromRaw(value, indent, options);
   }
-  if (preserveTypes && typeof value !== "function") {
+  if (options.preserveTypes && typeof value !== "function") {
     return JSON.stringify(value);
   }
   return value.toString();
