@@ -5,14 +5,16 @@ export interface GenObjectOptions extends CodegenOptions {
   preserveTypes?: boolean;
 }
 
-export function genObjectFromValues(
-  obj: Record<string, any>,
-  indent = "",
-  options: GenObjectOptions = {},
-): string {
-  return genObjectFromRaw(obj, indent, { preserveTypes: true, ...options });
-}
-
+/**
+ * Serialize an object to a string.
+ *
+ * @example
+ *
+ * ```js
+ * genObjectFromValues({ foo: "bar", test: '() => import("pkg")' })
+ * // ~> `{ foo: bar, test: () => import("pkg") }`
+ * ```
+ */
 export function genObjectFromRaw(
   object: Record<string, any>,
   indent = "",
@@ -21,6 +23,33 @@ export function genObjectFromRaw(
   return genObjectFromRawEntries(Object.entries(object), indent, options);
 }
 
+/**
+ * Serialize an object to a string.
+ *
+ * @example
+ *
+ * ```js
+ * genObjectFromValues({ foo: "bar" })
+ * // ~> `{ foo: "bar" }`
+ * ```
+ */
+export function genObjectFromValues(
+  obj: Record<string, any>,
+  indent = "",
+  options: GenObjectOptions = {},
+): string {
+  return genObjectFromRaw(obj, indent, { preserveTypes: true, ...options });
+}
+
+/**
+ * Serialize an array to a string.
+ *
+ * @example
+ *
+ * ```js
+ * genArrayFromRaw([1, 2, 3])
+ * // ~> `[1, 2, 3]`
+ */
 export function genArrayFromRaw(
   array: any[],
   indent = "",
@@ -34,6 +63,9 @@ export function genArrayFromRaw(
   );
 }
 
+/**
+ * Serialize an array of key-value pairs to a string.
+ */
 export function genObjectFromRawEntries(
   array: [key: string, value: any][],
   indent = "",

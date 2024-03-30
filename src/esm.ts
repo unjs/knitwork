@@ -1,8 +1,13 @@
 import { CodegenOptions } from "./types";
 import { genString } from "./string";
+import { _genStatement } from "./_utils";
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
 export type ESMImport = string | { name: string; as?: string };
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export
+// https://tc39.es/ecma262/multipage/ecmascript-language-scripts-and-modules.html#sec-exports
+export type ESMExport = string | { name: string; as?: string };
 
 export interface ESMCodeGenOptions extends CodegenOptions {
   // https://github.com/tc39/proposal-import-attributes
@@ -18,6 +23,46 @@ export interface DynamicImportOptions extends ESMCodeGenOptions {
   interopDefault?: boolean;
 }
 
+/**
+ * Generate an ESM `import` statement.
+ *
+ * @example
+ *
+ * ```js
+ * genImport("pkg", "foo");
+ * // ~> `import foo from "pkg";`
+ *
+ * genImport("pkg", ["foo"]);
+ * // ~> `import { foo } from "pkg";`
+ *
+ * genImport("pkg", ["a", "b"]);
+ * // ~> `import { a, b } from "pkg`;
+ *
+ * genImport("pkg", [{ name: "default", as: "bar" }]);
+ * // ~> `import { default as bar } from "pkg`;
+ *
+ * genImport("pkg", [{ name: "foo", as: "bar" }]);
+ * // ~> `import { foo as bar } from "pkg`;
+ *
+ * genImport("pkg", "foo", { assert: { type: "json" } });
+ * // ~> `import foo from "pkg" assert { type: "json" };
+ *
+ * genExport("pkg", "foo");
+ * // ~> `export foo from "pkg";`
+ *
+ * genExport("pkg", ["a", "b"]);
+ * // ~> `export { a, b } from "pkg";`
+ *
+ * // export * as bar from "pkg"
+ * genExport("pkg", { name: "*", as: "bar" });
+ * // ~> `export * as bar from "pkg";`
+ *
+ * genExport("pkg", "foo", { attributes: { type: "json" } });
+ * // ~> `export foo from "pkg" with { type: "json" };`
+ * ```
+ *
+ * @group ESM
+ */
 export function genImport(
   specifier: string,
   imports?: ESMImport | ESMImport[],
@@ -26,6 +71,11 @@ export function genImport(
   return _genStatement("import", specifier, imports, options);
 }
 
+/**
+ * Generate an ESM `import type` statement.
+ *
+ * @group ESM
+ */
 export function genTypeImport(
   specifier: string,
   imports: ESMImport[],
@@ -34,29 +84,11 @@ export function genTypeImport(
   return _genStatement("import type", specifier, imports, options);
 }
 
-export function genTypeExport(
-  specifier: string,
-  imports: ESMImport[],
-  options: ESMCodeGenOptions = {},
-) {
-  return _genStatement("export type", specifier, imports, options);
-}
-
-export const genInlineTypeImport = (
-  specifier: string,
-  name = "default",
-  options: ESMCodeGenOptions = {},
-) => {
-  return `typeof ${genDynamicImport(specifier, {
-    ...options,
-    wrapper: false,
-  })}.${name}`;
-};
-
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export
-// https://tc39.es/ecma262/multipage/ecmascript-language-scripts-and-modules.html#sec-exports
-export type ESMExport = string | { name: string; as?: string };
-
+/**
+ * Generate an ESM `export` statement.
+ *
+ * @group ESM
+ */
 export function genExport(
   specifier: string,
   exports?: ESMExport | ESMExport[],
@@ -65,69 +97,11 @@ export function genExport(
   return _genStatement("export", specifier, exports, options);
 }
 
-type ESMImportOrExport = ESMImport | ESMExport;
-type ImportExportType = "import" | "export" | "import type" | "export type";
-function _genStatement(
-  type: ImportExportType,
-  specifier: string,
-  names?: ESMImportOrExport | ESMImportOrExport[],
-  options: ESMCodeGenOptions = {},
-) {
-  const specifierString = genString(specifier, options);
-  if (!names) {
-    return `${type} ${specifierString};`;
-  }
-
-  const nameArray = Array.isArray(names);
-
-  const _names = (nameArray ? names : [names]).map((index) => {
-    if (typeof index === "string") {
-      return { name: index };
-    }
-    if (index.name === index.as) {
-      index = { name: index.name };
-    }
-    // TODO: Ensure `name` and `as` are valid identifiers
-    // TODO: Ensure `as` is provided for default import
-    return index;
-  });
-
-  const namesString = _names
-    .map((index) => (index.as ? `${index.name} as ${index.as}` : index.name))
-    .join(", ");
-  if (nameArray) {
-    return `${type} { ${namesString} } from ${genString(
-      specifier,
-      options,
-    )}${_genImportAttributes(type, options)};`;
-  }
-  return `${type} ${namesString} from ${genString(
-    specifier,
-    options,
-  )}${_genImportAttributes(type, options)};`;
-}
-
-function _genImportAttributes(
-  type: ImportExportType,
-  options: ESMCodeGenOptions,
-) {
-  // import assertions isn't specified type-only import or export on Typescript
-  if (type === "import type" || type === "export type") {
-    return "";
-  }
-
-  if (typeof options.attributes?.type === "string") {
-    return ` with { type: ${genString(options.attributes.type)} }`;
-  }
-
-  // TODO: Remove deprecated `assert` in the next major release
-  if (typeof options.assert?.type === "string") {
-    return ` assert { type: ${genString(options.assert.type)} }`;
-  }
-
-  return "";
-}
-
+/**
+ * Generate an ESM dynamic `import()` statement.
+ *
+ * @group ESM
+ */
 export function genDynamicImport(
   specifier: string,
   options: DynamicImportOptions = {},
@@ -144,6 +118,8 @@ export function genDynamicImport(
   )}${commentString}${optionsString})${ineropString}`;
 }
 
+// --- internal ---
+
 function _genDynamicImportAttributes(options: DynamicImportOptions = {}) {
   // TODO: Remove deprecated `assert` in the next major release
   if (typeof options.assert?.type === "string") {
@@ -156,69 +132,3 @@ function _genDynamicImportAttributes(options: DynamicImportOptions = {}) {
 
   return "";
 }
-
-export function genSafeVariableName(name: string) {
-  if (reservedNames.has(name)) {
-    return `_${name}`;
-  }
-  /* eslint-disable unicorn/prefer-code-point */
-  return name
-    .replace(/^\d/, (r) => `_${r}`)
-    .replace(/\W/g, (r) => "_" + r.charCodeAt(0));
-  /* eslint-enable unicorn/prefer-code-point */
-}
-
-// Credit: https://mathiasbynens.be/notes/reserved-keywords
-const reservedNames = new Set([
-  "Infinity",
-  "NaN",
-  "arguments",
-  "await",
-  "break",
-  "case",
-  "catch",
-  "class",
-  "const",
-  "continue",
-  "debugger",
-  "default",
-  "delete",
-  "do",
-  "else",
-  "enum",
-  "eval",
-  "export",
-  "extends",
-  "false",
-  "finally",
-  "for",
-  "function",
-  "if",
-  "implements",
-  "import",
-  "in",
-  "instanceof",
-  "interface",
-  "let",
-  "new",
-  "null",
-  "package",
-  "private",
-  "protected",
-  "public",
-  "return",
-  "static",
-  "super",
-  "switch",
-  "this",
-  "throw",
-  "true",
-  "try",
-  "typeof",
-  "undefined",
-  "var",
-  "void",
-  "while",
-  "with",
-  "yield",
-]);

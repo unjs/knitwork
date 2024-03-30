@@ -33,121 +33,150 @@ bun install knitwork
 
 <!-- /automd -->
 
-## Usage
+<!-- automd:jsimport cjs cdn -->
 
-**Generating ESM syntax:**
+**ESM** (Node.js, Bun)
 
 ```js
-import { genImport, genExport } from "knitwork";
+import {} from "knitwork";
+```
 
-// import foo from "pkg"
-console.log(genImport("pkg", "foo"));
+**CommonJS** (Legacy Node.js)
 
-// import { foo } from "pkg"
-console.log(genImport("pkg", ["foo"]));
+```js
+const {} = require("knitwork");
+```
 
-// import { a, b } from "pkg"
-console.log(genImport("pkg", ["a", "b"]));
+**CDN** (Deno, Bun and Browsers)
 
-// import { default as bar } from "pkg";
-console.log(genImport("pkg", [{ name: "default", as: "bar" }]));
+```js
+import {} from "https://esm.sh/knitwork";
+```
 
-// import { foo as bar } from "pkg";
-console.log(genImport("pkg", [{ name: "foo", as: "bar" }]));
+<!-- /automd -->
 
-// import foo from "pkg" assert { type: "json" };
-console.log(genImport("pkg", "foo", { assert: { type: "json" } }));
+<!-- automd:jsdocs src=./src/index.ts -->
 
-// export foo from "pkg"
-console.log(genExport("pkg", "foo"));
+## ESM
 
-// export { a, b } from "pkg"
-console.log(genExport("pkg", ["a", "b"]));
+### `genDynamicImport(specifier, options)`
+
+Generate an ESM dynamic `import()` statement.
+
+### `genExport(specifier, exports?, options)`
+
+Generate an ESM `export` statement.
+
+### `genImport(specifier, imports?, options)`
+
+Generate an ESM `import` statement.
+
+**Example:**
+
+```js
+genImport("pkg", "foo");
+// ~> `import foo from "pkg";`
+
+genImport("pkg", ["foo"]);
+// ~> `import { foo } from "pkg";`
+
+genImport("pkg", ["a", "b"]);
+// ~> `import { a, b } from "pkg`;
+
+genImport("pkg", [{ name: "default", as: "bar" }]);
+// ~> `import { default as bar } from "pkg`;
+
+genImport("pkg", [{ name: "foo", as: "bar" }]);
+// ~> `import { foo as bar } from "pkg`;
+
+genImport("pkg", "foo", { assert: { type: "json" } });
+// ~> `import foo from "pkg" assert { type: "json" };
+
+genExport("pkg", "foo");
+// ~> `export foo from "pkg";`
+
+genExport("pkg", ["a", "b"]);
+// ~> `export { a, b } from "pkg";`
 
 // export * as bar from "pkg"
-console.log(genExport("pkg", { name: "*", as: "bar" }));
+genExport("pkg", { name: "*", as: "bar" });
+// ~> `export * as bar from "pkg";`
 
-// export foo from "pkg" assert { type: "json" };
-console.log(genExport("pkg", "foo", { assert: { type: "json" } }));
+genExport("pkg", "foo", { attributes: { type: "json" } });
+// ~> `export foo from "pkg" with { type: "json" };`
 ```
 
-**Generating TS:**
+### `genTypeImport(specifier, imports, options)`
+
+Generate an ESM `import type` statement.
+
+## Typescript
+
+### `genAugmentation(specifier)`
+
+Generate typescript `declare module` augmentation.
+
+### `genInlineTypeImport(specifier, name, options)`
+
+Generate an typescript `typeof import()` statement for default import.
+
+### `genInterface(name, contents?, options)`
+
+Generate typescript interface.
+
+### `genTypeExport(specifier, imports, options)`
+
+Generate a typescript `export type` statement.
+
+### `genTypeObject(object, indent)`
+
+Generate typescript object type.
+
+### `escapeString(id)`
+
+### `genArrayFromRaw(array, indent, options)`
+
+Serialize an array to a string.
+
+**Example:**
 
 ```js
-import {
-  genInterface,
-  genAugmentation,
-  genInlineTypeImport,
-  genTypeImport,
-  genTypeExport,
-} from "knitwork";
+genArrayFromRaw([1, 2, 3])
+// ~> `[1, 2, 3]`
 
-// interface FooInterface extends A, B {
-//   name: boolean
-//   optional?: string
-// }
-console.log(
-  genInterface(
-    "FooInterface",
-    { name: "boolean", "optional?": "string" },
-    { extends: ["A", "B"] },
-  ),
-);
-// declare module "my-module" {
-//   interface MyInterface {}
-// }
-console.log(genAugmentation("my-module", { MyInterface: {} }));
-// typeof import("my-module").genString'
-console.log(genInlineTypeImport("my-module", "genString"));
-// typeof import("my-module").default'
-console.log(genInlineTypeImport("my-module"));
-// import type { test as value } from "my-module";
-console.log(genTypeImport("my-module", [{ name: "test", as: "value" }]));
-// export type { test } from "my-module";
-console.log(genTypeExport("my-module", ["test"]));
-```
+### `genObjectFromRaw(object, indent, options)`
 
-**Serializing JS objects:**
+Serialize an object to a string.
+
+**Example:**
 
 ```js
-import {
-  genObjectFromRaw,
-  genObjectFromRawEntries,
-  genArrayFromRaw,
-} from "knitwork";
-
-// { foo: 'bar', test: () => import("pkg") }
-console.log(genObjectFromValues({ foo: "bar", test: '() => import("pkg")' }));
-
-// { test: () => import("pkg") }
-console.log(genObjectFromRaw({ test: '() => import("pkg")' }));
-
-// { 0: [ test, () => import("pkg") ] }
-console.log(genObjectFromRaw([["test", '() => import("pkg")']]));
-
-const entries = Object.entries({
-  a: 1,
-  b: null,
-  c: '"c"',
-  nest: { hello: '"world"', fn: () => 1 },
-});
-// { a: 1, b: null, c: "c", nest: { hello: "world", fn: () => 1 } }
-console.log(genObjectFromRawEntries(entries));
-
-// [ 1, 2, () => import("pkg") ]
-console.log(genArrayFromRaw(["1", "2", '() => import("pkg")']));
+genObjectFromValues({ foo: "bar", test: '() => import("pkg")' })
+// ~> `{ foo: bar, test: () => import("pkg") }`
 ```
 
-**Generating safe variable names:**
+### `genObjectFromRawEntries(array, indent, options)`
+
+Serialize an array of key-value pairs to a string.
+
+### `genObjectFromValues(obj, indent, options)`
+
+Serialize an object to a string.
+
+**Example:**
 
 ```js
-import { genSafeVariableName } from "knitwork";
-
-// _123_32foo
-genSafeVariableName("123 foo");
-// _for
-genSafeVariableName("for");
+genObjectFromValues({ foo: "bar" })
+// ~> `{ foo: "bar" }`
 ```
+
+### `genSafeVariableName(name)`
+
+Generate a safe javascript variable name.
+
+### `genString(input, options)`
+
+<!-- /automd -->
 
 ## Contribution
 

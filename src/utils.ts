@@ -1,5 +1,8 @@
 import { genString } from "./string";
 
+/**
+ * Wrap an array of strings in delimiters.
+ */
 export function wrapInDelimiters(
   lines: string[],
   indent = "",
@@ -17,6 +20,9 @@ export function wrapInDelimiters(
 
 const VALID_IDENTIFIER_RE = /^[$_]?([A-Z_a-z]\w*|\d)$/;
 
+/**
+ * Generate a safe javascript variable name for an object key.
+ */
 export function genObjectKey(key: string) {
   return VALID_IDENTIFIER_RE.test(key) ? key : genString(key);
 }

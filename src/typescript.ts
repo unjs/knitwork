@@ -1,3 +1,5 @@
+import { _genStatement } from "./_utils";
+import { ESMCodeGenOptions, ESMImport, genDynamicImport } from "./esm";
 import { genString } from "./string";
 import { genObjectKey, wrapInDelimiters } from "./utils";
 
@@ -9,7 +11,41 @@ export interface GenInterfaceOptions {
   export?: boolean;
 }
 
-export const genTypeObject = (object: TypeObject, indent = ""): string => {
+/**
+ * Generate a typescript `export type` statement.
+ *
+ * @group Typescript
+ */
+export function genTypeExport(
+  specifier: string,
+  imports: ESMImport[],
+  options: ESMCodeGenOptions = {},
+) {
+  return _genStatement("export type", specifier, imports, options);
+}
+
+/**
+ * Generate an typescript `typeof import()` statement for default import.
+ *
+ * @group Typescript
+ */
+export function genInlineTypeImport(
+  specifier: string,
+  name = "default",
+  options: ESMCodeGenOptions = {},
+) {
+  return `typeof ${genDynamicImport(specifier, {
+    ...options,
+    wrapper: false,
+  })}.${name}`;
+}
+
+/**
+ * Generate typescript object type.
+ *
+ * @group Typescript
+ */
+export function genTypeObject(object: TypeObject, indent = ""): string {
   const newIndent = indent + "  ";
   return wrapInDelimiters(
     Object.entries(object).map(([key, value]) => {
@@ -27,13 +63,18 @@ export const genTypeObject = (object: TypeObject, indent = ""): string => {
     "{}",
     false,
   );
-};
+}
 
-export const genInterface = (
+/**
+ * Generate typescript interface.
+ *
+ * @group Typescript
+ */
+export function genInterface(
   name: string,
   contents?: TypeObject,
   options: GenInterfaceOptions = {},
-) => {
+): string {
   const result = [
     options.export && "export",
     `interface ${name}`,
@@ -48,15 +89,20 @@ export const genInterface = (
     .filter(Boolean)
     .join(" ");
   return result;
-};
+}
 
-export const genAugmentation = (
+/**
+ * Generate typescript `declare module` augmentation.
+ *
+ * @group Typescript
+ */
+export function genAugmentation(
   specifier: string,
   interfaces?: Record<
     string,
     TypeObject | [TypeObject, Omit<GenInterfaceOptions, "export">]
   >,
-) => {
+): string {
   return `declare module ${genString(specifier)} ${wrapInDelimiters(
     Object.entries(interfaces || {}).map(
       ([key, entry]) =>
@@ -66,4 +112,4 @@ export const genAugmentation = (
           : genInterface(key, entry)),
     ),
   )}`;
-};
+}
