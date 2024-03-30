@@ -89,8 +89,8 @@ genImport("pkg", [{ name: "default", as: "bar" }]);
 genImport("pkg", [{ name: "foo", as: "bar" }]);
 // ~> `import { foo as bar } from "pkg`;
 
-genImport("pkg", "foo", { assert: { type: "json" } });
-// ~> `import foo from "pkg" assert { type: "json" };
+genImport("pkg", "foo", { attributes: { type: "json" } });
+// ~> `import foo from "pkg" with { type: "json" };
 
 genExport("pkg", "foo");
 // ~> `export foo from "pkg";`
@@ -101,9 +101,6 @@ genExport("pkg", ["a", "b"]);
 // export * as bar from "pkg"
 genExport("pkg", { name: "*", as: "bar" });
 // ~> `export * as bar from "pkg";`
-
-genExport("pkg", "foo", { attributes: { type: "json" } });
-// ~> `export foo from "pkg" with { type: "json" };`
 ```
 
 ### `genTypeImport(specifier, imports, options)`
