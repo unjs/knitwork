@@ -170,7 +170,7 @@ Generate typescript `declare module` augmentation.
 
 Generate an typescript `typeof import()` statement for default import.
 
-### `genInterface(name, contents?, options)`
+### `genInterface(name, contents?, options, indent)`
 
 Generate typescript interface.
 
