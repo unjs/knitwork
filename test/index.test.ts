@@ -36,6 +36,11 @@ const genImportTests = [
     code: 'import { foo } from "pkg" assert { type: "json" };',
     options: { assert: { type: "json" } },
   },
+  {
+    names: ["foo"],
+    code: 'import { foo } from "pkg" with { type: "json" };',
+    options: { attributes: { type: "json" } },
+  },
 ];
 
 describe("genImport", () => {
@@ -86,6 +91,10 @@ const genDynamicImportTests = [
   {
     opts: { assert: { type: "json" } },
     code: '() => import("pkg", { assert: { type: "json" } })',
+  },
+  {
+    opts: { attributes: { type: "json" } },
+    code: '() => import("pkg", { with: { type: "json" } })',
   },
 ];
 
