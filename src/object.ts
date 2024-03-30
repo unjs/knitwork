@@ -14,6 +14,8 @@ export interface GenObjectOptions extends CodegenOptions {
  * genObjectFromValues({ foo: "bar", test: '() => import("pkg")' })
  * // ~> `{ foo: bar, test: () => import("pkg") }`
  * ```
+ *
+ * @group serialization
  */
 export function genObjectFromRaw(
   object: Record<string, any>,
@@ -32,6 +34,8 @@ export function genObjectFromRaw(
  * genObjectFromValues({ foo: "bar" })
  * // ~> `{ foo: "bar" }`
  * ```
+ *
+ * @group serialization
  */
 export function genObjectFromValues(
   obj: Record<string, any>,
@@ -49,6 +53,9 @@ export function genObjectFromValues(
  * ```js
  * genArrayFromRaw([1, 2, 3])
  * // ~> `[1, 2, 3]`
+ * ```
+ *
+ * @group serialization
  */
 export function genArrayFromRaw(
   array: any[],
@@ -65,6 +72,8 @@ export function genArrayFromRaw(
 
 /**
  * Serialize an array of key-value pairs to a string.
+ *
+ * @group serialization
  */
 export function genObjectFromRawEntries(
   array: [key: string, value: any][],

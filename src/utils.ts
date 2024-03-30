@@ -2,6 +2,8 @@ import { genString } from "./string";
 
 /**
  * Wrap an array of strings in delimiters.
+ *
+ * @group utils
  */
 export function wrapInDelimiters(
   lines: string[],
@@ -22,6 +24,8 @@ const VALID_IDENTIFIER_RE = /^[$_]?([A-Z_a-z]\w*|\d)$/;
 
 /**
  * Generate a safe javascript variable name for an object key.
+ *
+ * @group utils
  */
 export function genObjectKey(key: string) {
   return VALID_IDENTIFIER_RE.test(key) ? key : genString(key);

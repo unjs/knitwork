@@ -110,29 +110,7 @@ genExport("pkg", "foo", { attributes: { type: "json" } });
 
 Generate an ESM `import type` statement.
 
-## Typescript
-
-### `genAugmentation(specifier)`
-
-Generate typescript `declare module` augmentation.
-
-### `genInlineTypeImport(specifier, name, options)`
-
-Generate an typescript `typeof import()` statement for default import.
-
-### `genInterface(name, contents?, options)`
-
-Generate typescript interface.
-
-### `genTypeExport(specifier, imports, options)`
-
-Generate a typescript `export type` statement.
-
-### `genTypeObject(object, indent)`
-
-Generate typescript object type.
-
-### `escapeString(id)`
+## Serialization
 
 ### `genArrayFromRaw(array, indent, options)`
 
@@ -143,6 +121,7 @@ Serialize an array to a string.
 ```js
 genArrayFromRaw([1, 2, 3])
 // ~> `[1, 2, 3]`
+```
 
 ### `genObjectFromRaw(object, indent, options)`
 
@@ -170,11 +149,41 @@ genObjectFromValues({ foo: "bar" })
 // ~> `{ foo: "bar" }`
 ```
 
+## String
+
+### `escapeString(id)`
+
+Escape a string for use in a javascript string.
+
 ### `genSafeVariableName(name)`
 
 Generate a safe javascript variable name.
 
 ### `genString(input, options)`
+
+Generate a string with double or single quotes and handle escapes.
+
+## Typescript
+
+### `genAugmentation(specifier)`
+
+Generate typescript `declare module` augmentation.
+
+### `genInlineTypeImport(specifier, name, options)`
+
+Generate an typescript `typeof import()` statement for default import.
+
+### `genInterface(name, contents?, options)`
+
+Generate typescript interface.
+
+### `genTypeExport(specifier, imports, options)`
+
+Generate a typescript `export type` statement.
+
+### `genTypeObject(object, indent)`
+
+Generate typescript object type.
 
 <!-- /automd -->
 

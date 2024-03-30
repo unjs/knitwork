@@ -1,5 +1,10 @@
 import type { CodegenOptions } from "./types";
 
+/**
+ * Generate a string with double or single quotes and handle escapes.
+ *
+ * @group string
+ */
 export function genString(input: string, options: CodegenOptions = {}) {
   const str = JSON.stringify(input);
   if (!options.singleQuotes) {
@@ -12,6 +17,12 @@ export function genString(input: string, options: CodegenOptions = {}) {
 const NEEDS_ESCAPE_RE = /[\n\r'\\\u2028\u2029]/;
 const QUOTE_NEWLINE_RE = /([\n\r'\u2028\u2029])/g;
 const BACKSLASH_RE = /\\/g;
+
+/**
+ * Escape a string for use in a javascript string.
+ *
+ * @group string
+ */
 export function escapeString(id: string): string {
   if (!NEEDS_ESCAPE_RE.test(id)) {
     return id;
@@ -21,6 +32,8 @@ export function escapeString(id: string): string {
 
 /**
  * Generate a safe javascript variable name.
+ *
+ * @group string
  */
 export function genSafeVariableName(name: string) {
   if (reservedNames.has(name)) {
