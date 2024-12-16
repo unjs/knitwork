@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.2.0
+
+[compare changes](https://github.com/unjs/knitwork/compare/v1.1.0...v1.2.0)
+
+### 🚀 Enhancements
+
+- Expose `genObjectKey` and `wrapInDelimiters` utils ([227ec06](https://github.com/unjs/knitwork/commit/227ec06))
+
+### 📖 Documentation
+
+- Correct jsdocs for `genObjectFromRaw` ([#97](https://github.com/unjs/knitwork/pull/97))
+
+### 🏡 Chore
+
+- Update deps ([02a2f68](https://github.com/unjs/knitwork/commit/02a2f68))
+- Update eslint ([c58341b](https://github.com/unjs/knitwork/commit/c58341b))
+- Apply automated updates ([63cd869](https://github.com/unjs/knitwork/commit/63cd869))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
 ## v1.1.0
 
 [compare changes](https://github.com/unjs/knitwork/compare/v1.0.0...v1.1.0)
