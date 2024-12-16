@@ -3,7 +3,7 @@
 <!-- automd:badges color=yellow codecov -->
 
 [![npm version](https://img.shields.io/npm/v/knitwork?color=yellow)](https://npmjs.com/package/knitwork)
-[![npm downloads](https://img.shields.io/npm/dm/knitwork?color=yellow)](https://npmjs.com/package/knitwork)
+[![npm downloads](https://img.shields.io/npm/dm/knitwork?color=yellow)](https://npm.chart.dev/knitwork)
 [![codecov](https://img.shields.io/codecov/c/gh/unjs/knitwork?color=yellow)](https://codecov.io/gh/unjs/knitwork)
 
 <!-- /automd -->
@@ -29,13 +29,16 @@ pnpm install knitwork
 
 # bun
 bun install knitwork
+
+# deno
+deno install knitwork
 ```
 
 <!-- /automd -->
 
 <!-- automd:jsimport cjs cdn -->
 
-**ESM** (Node.js, Bun)
+**ESM** (Node.js, Bun, Deno)
 
 ```js
 import {} from "knitwork";
