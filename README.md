@@ -116,6 +116,8 @@ Generate an ESM `import type` statement.
 
 Serialize an array to a string.
 
+Values are not escaped or quoted.
+
 **Example:**
 
 ```js
@@ -127,10 +129,12 @@ genArrayFromRaw([1, 2, 3])
 
 Serialize an object to a string.
 
+Values are not escaped or quoted.
+
 **Example:**
 
 ```js
-genObjectFromValues({ foo: "bar", test: '() => import("pkg")' })
+genObjectFromRaw({ foo: "bar", test: '() => import("pkg")' })
 // ~> `{ foo: bar, test: () => import("pkg") }`
 ```
 
@@ -138,9 +142,13 @@ genObjectFromValues({ foo: "bar", test: '() => import("pkg")' })
 
 Serialize an array of key-value pairs to a string.
 
+Values are not escaped or quoted.
+
 ### `genObjectFromValues(obj, indent, options)`
 
 Serialize an object to a string.
+
+Values are escaped and quoted if necessary.
 
 **Example:**
 

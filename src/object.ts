@@ -8,10 +8,12 @@ export interface GenObjectOptions extends CodegenOptions {
 /**
  * Serialize an object to a string.
  *
+ * Values are not escaped or quoted.
+ *
  * @example
  *
  * ```js
- * genObjectFromValues({ foo: "bar", test: '() => import("pkg")' })
+ * genObjectFromRaw({ foo: "bar", test: '() => import("pkg")' })
  * // ~> `{ foo: bar, test: () => import("pkg") }`
  * ```
  *
@@ -27,6 +29,8 @@ export function genObjectFromRaw(
 
 /**
  * Serialize an object to a string.
+ *
+ * Values are escaped and quoted if necessary.
  *
  * @example
  *
@@ -47,6 +51,8 @@ export function genObjectFromValues(
 
 /**
  * Serialize an array to a string.
+ *
+ * Values are not escaped or quoted.
  *
  * @example
  *
@@ -72,6 +78,8 @@ export function genArrayFromRaw(
 
 /**
  * Serialize an array of key-value pairs to a string.
+ *
+ * Values are not escaped or quoted.
  *
  * @group serialization
  */
