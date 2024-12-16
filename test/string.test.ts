@@ -17,8 +17,7 @@ describe("genString", () => {
   }
 });
 
-describe("genString (singleQoute)", () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+describe("genString (singleQuotes: true)", () => {
   for (const [input, _, output] of genStringTests) {
     it(genTestTitle(input), () => {
       expect(genString(input, { singleQuotes: true })).to.equal(output);
