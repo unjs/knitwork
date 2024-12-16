@@ -193,6 +193,16 @@ Generate a typescript `export type` statement.
 
 Generate typescript object type.
 
+## Utils
+
+### `genObjectKey(key)`
+
+Generate a safe javascript variable name for an object key.
+
+### `wrapInDelimiters(lines, indent, delimiters, withComma)`
+
+Wrap an array of strings in delimiters.
+
 <!-- /automd -->
 
 ## Contribution
