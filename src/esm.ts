@@ -95,6 +95,17 @@ export function genExport(
 }
 
 /**
+ * Generate an ESM `export default` statement.
+ *
+ * @group ESM
+ */
+export function genExportDefault(
+  specifier: string,
+) {
+  return `export default ${specifier};`;
+}
+
+/**
  * Generate an ESM dynamic `import()` statement.
  *
  * @group ESM
