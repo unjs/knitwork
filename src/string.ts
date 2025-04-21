@@ -6,19 +6,16 @@ import type { CodegenOptions } from "./types";
  * @group string
  */
 export function genString(input: string, options: CodegenOptions = {}) {
+  if (options.extension) {
+    input = input + "." + options.extension;
+  }
+
   const str = JSON.stringify(input);
   if (!options.singleQuotes) {
-    if (options.extension) {
-      return str + "." + options.extension;
-    }
     return str;
   }
-  const singleQuotedStr = `'${escapeString(str).slice(1, -1)}'`;
 
-  if (options.extension) {
-    return singleQuotedStr + "." + options.extension;
-  }
-  return singleQuotedStr;
+  return `'${escapeString(str).slice(1, -1)}'`;
 }
 
 // https://github.com/rollup/rollup/blob/master/src/utils/escapeId.ts
