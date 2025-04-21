@@ -8,9 +8,17 @@ import type { CodegenOptions } from "./types";
 export function genString(input: string, options: CodegenOptions = {}) {
   const str = JSON.stringify(input);
   if (!options.singleQuotes) {
+    if (options.extension) {
+      return str + "." + options.extension;
+    }
     return str;
   }
-  return `'${escapeString(str).slice(1, -1)}'`;
+  const singleQuotedStr = `'${escapeString(str).slice(1, -1)}'`;
+
+  if (options.extension) {
+    return singleQuotedStr + "." + options.extension;
+  }
+  return singleQuotedStr;
 }
 
 // https://github.com/rollup/rollup/blob/master/src/utils/escapeId.ts
