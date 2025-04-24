@@ -112,5 +112,8 @@ export function genAugmentation(
           ? genInterface(key, ...entry)
           : genInterface(key, entry, {}, "  ")),
     ),
+    undefined,
+    undefined,
+    false,
   )}`;
 }
