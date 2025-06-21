@@ -3,12 +3,31 @@ import { ESMCodeGenOptions, ESMImport, genDynamicImport } from "./esm";
 import { genString } from "./string";
 import { genObjectKey, wrapInDelimiters } from "./utils";
 
-export type TypeObject = {
-  [key: string]: string | TypeObject;
+export type TypeObjectWithJSDoc = {
+  type: string;
+  jsdoc: string | Record<string, unknown>;
 };
+
+export type TypeObject = {
+  [key: string]: string | TypeObject | TypeObjectWithJSDoc;
+};
+
 export interface GenInterfaceOptions {
   extends?: string | string[];
   export?: boolean;
+  jsdoc?: string | Record<string, unknown>;
+}
+
+/**
+ * Type guard to check if a value is TypeObjectWithJSDoc
+ */
+function isTypeObjectWithJSDoc(value: unknown): value is TypeObjectWithJSDoc {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "type" in value &&
+    "jsdoc" in value
+  );
 }
 
 /**
@@ -47,10 +66,25 @@ export function genInlineTypeImport(
  */
 export function genTypeObject(object: TypeObject, indent = ""): string {
   const newIndent = indent + "  ";
+
   return wrapInDelimiters(
     Object.entries(object).map(([key, value]) => {
       const [, k = key, optional = ""] =
         key.match(/^(.*[^?])(\?)?$/) /* c8 ignore next */ || [];
+
+      if (isTypeObjectWithJSDoc(value)) {
+        const jsdocComment =
+          typeof value.jsdoc === "string"
+            ? `${newIndent}/** ${value.jsdoc} */\n${newIndent}`
+            : `${newIndent}/**\n${newIndent} * ${value.jsdoc.description}\n${Object.entries(
+                value.jsdoc,
+              )
+                .filter(([key]) => key !== "description")
+                .map(([key, val]) => `${newIndent} * @${key} ${val}`)
+                .join("\n")}\n${newIndent} */\n${newIndent}`;
+        return `${jsdocComment}${genObjectKey(k)}${optional}: ${value.type}`;
+      }
+
       if (typeof value === "string") {
         return `${newIndent}${genObjectKey(k)}${optional}: ${value}`;
       }
@@ -76,7 +110,20 @@ export function genInterface(
   options: GenInterfaceOptions = {},
   indent = "",
 ): string {
-  const result = [
+  let jsdocComment = "";
+
+  if (options.jsdoc && typeof options.jsdoc === "string") {
+    jsdocComment = `/** ${options.jsdoc} */\n`;
+  } else if (options.jsdoc && typeof options.jsdoc === "object") {
+    jsdocComment = `/**\n * ${options.jsdoc.description}\n${Object.entries(
+      options.jsdoc,
+    )
+      .filter(([key]) => key !== "description")
+      .map(([key, val]) => ` * @${key} ${val}`)
+      .join("\n")}\n */\n`;
+  }
+
+  const interfaceParts = [
     options.export && "export",
     `interface ${name}`,
     options.extends &&
@@ -89,7 +136,8 @@ export function genInterface(
   ]
     .filter(Boolean)
     .join(" ");
-  return result;
+
+  return `${jsdocComment}${interfaceParts}`;
 }
 
 /**
