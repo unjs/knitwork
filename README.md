@@ -25,13 +25,13 @@ npm install knitwork
 yarn add knitwork
 
 # pnpm
-pnpm install knitwork
+pnpm add knitwork
 
 # bun
 bun install knitwork
 
 # deno
-deno install knitwork
+deno install npm:knitwork
 ```
 
 <!-- /automd -->
@@ -50,7 +50,7 @@ import {} from "knitwork";
 const {} = require("knitwork");
 ```
 
-**CDN** (Deno, Bun and Browsers)
+**CDN** (Deno and Browsers)
 
 ```js
 import {} from "https://esm.sh/knitwork";
