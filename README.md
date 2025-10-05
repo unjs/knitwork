@@ -199,6 +199,10 @@ Generate typescript object type.
 
 Generate a safe javascript variable name for an object key.
 
+### `genPropertyAccess(key)`
+
+Generate a safe javascript property access expression for an object key.
+
 ### `wrapInDelimiters(lines, indent, delimiters, withComma)`
 
 Wrap an array of strings in delimiters.
