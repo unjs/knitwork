@@ -66,6 +66,10 @@ import {} from "https://esm.sh/knitwork";
 
 Generate an ESM dynamic `import()` statement.
 
+### `genDynamicTypeImport(specifier, name, options)`
+
+Generate an ESM type `import()` statement.
+
 ### `genExport(specifier, exports?, options)`
 
 Generate an ESM `export` statement.
