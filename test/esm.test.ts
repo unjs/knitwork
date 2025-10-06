@@ -4,6 +4,7 @@ import {
   genExport,
   genDynamicImport,
   genSafeVariableName,
+  genExportDefault,
 } from "../src";
 import { genTestTitle } from "./_utils";
 
@@ -104,6 +105,22 @@ describe("genDynamicImport", () => {
   for (const t of genDynamicImportTests) {
     it(genTestTitle(t.code), () => {
       const code = genDynamicImport("pkg", t.opts);
+      expect(code).to.equal(t.code);
+    });
+  }
+});
+
+const genExportDefaultTests = [
+  { value: "myFunction", code: "export default myFunction;" },
+  { value: "{ a, b }", code: "export default { a, b };" },
+  { value: "() => { return 'hello world' }", code: "export default () => { return 'hello world' };" },
+  { value: "class MyClass {}", code: "export default class MyClass {};" },
+];
+
+describe("genExportDefault", () => {
+  for (const t of genExportDefaultTests) {
+    it(genTestTitle(t.code), () => {
+      const code = genExportDefault(t.value);
       expect(code).to.equal(t.code);
     });
   }

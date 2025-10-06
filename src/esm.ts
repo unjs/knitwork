@@ -95,6 +95,26 @@ export function genExport(
 }
 
 /**
+ * Generate an ESM `export default` statement.
+ * 
+ * @example
+ * ```js
+ * genExportDefault("obj");
+ * // ~> `export default obj;`
+ * 
+ * genExportDefault("{ foo, bar }");
+ * // ~> `export default { foo, bar };`
+ * ```
+ *
+ * @group ESM
+ */
+export function genExportDefault(
+  specifier: string,
+) {
+  return `export default ${specifier};`;
+}
+
+/**
  * Generate an ESM dynamic `import()` statement.
  *
  * @group ESM
