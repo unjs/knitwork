@@ -4,6 +4,7 @@ import {
   genExport,
   genDynamicImport,
   genSafeVariableName,
+  genDynamicTypeImport,
 } from "../src";
 import { genTestTitle } from "./_utils";
 
@@ -104,6 +105,39 @@ describe("genDynamicImport", () => {
   for (const t of genDynamicImportTests) {
     it(genTestTitle(t.code), () => {
       const code = genDynamicImport("pkg", t.opts);
+      expect(code).to.equal(t.code);
+    });
+  }
+});
+
+const genDynamicTypeImportTests = [
+  {
+    code: 'typeof import("pkg")',
+  },
+  {
+    name: "foo",
+    code: 'typeof import("pkg").foo',
+  },
+  {
+    name: "foo-bar",
+    code: 'typeof import("pkg")["foo-bar"]',
+  },
+  {
+    name: "foo",
+    opts: { comment: 'webpackChunkName: "chunks/dynamic"' },
+    code: 'typeof import("pkg" /* webpackChunkName: "chunks/dynamic" */).foo',
+  },
+  {
+    name: "foo",
+    opts: { attributes: { type: "json" } },
+    code: 'typeof import("pkg", { with: { type: "json" } }).foo',
+  },
+];
+
+describe("genDynamicTypeImport", () => {
+  for (const t of genDynamicTypeImportTests) {
+    it(genTestTitle(t.code), () => {
+      const code = genDynamicTypeImport("pkg", t.name, t.opts);
       expect(code).to.equal(t.code);
     });
   }

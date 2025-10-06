@@ -66,6 +66,10 @@ import {} from "https://esm.sh/knitwork";
 
 Generate an ESM dynamic `import()` statement.
 
+### `genDynamicTypeImport(specifier, name, options)`
+
+Generate an ESM type `import()` statement.
+
 ### `genExport(specifier, exports?, options)`
 
 Generate an ESM `export` statement.
@@ -198,6 +202,10 @@ Generate typescript object type.
 ### `genObjectKey(key)`
 
 Generate a safe javascript variable name for an object key.
+
+### `genPropertyAccess(key)`
+
+Generate a safe javascript property access expression for an object key.
 
 ### `wrapInDelimiters(lines, indent, delimiters, withComma)`
 
