@@ -96,6 +96,15 @@ export function genExport(
 
 /**
  * Generate an ESM `export default` statement.
+ * 
+ * @example
+ * ```js
+ * genExportDefault("obj");
+ * // ~> `export default obj;`
+ * 
+ * genExportDefault("{ foo, bar }");
+ * // ~> `export default { foo, bar };`
+ * ```
  *
  * @group ESM
  */
