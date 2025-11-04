@@ -1,3 +1,4 @@
+import { VALID_IDENTIFIER_RE } from "./_utils";
 import { genString } from "./string";
 
 /**
@@ -20,8 +21,6 @@ export function wrapInDelimiters(
   );
 }
 
-const VALID_IDENTIFIER_RE = /^[$_]?([A-Z_a-z]\w*|\d)$/;
-
 /**
  * Generate a safe javascript variable name for an object key.
  *
@@ -29,13 +28,4 @@ const VALID_IDENTIFIER_RE = /^[$_]?([A-Z_a-z]\w*|\d)$/;
  */
 export function genObjectKey(key: string) {
   return VALID_IDENTIFIER_RE.test(key) ? key : genString(key);
-}
-
-/**
- * Generate a safe javascript property access expression for an object key.
- *
- * @group utils
- */
-export function genPropertyAccess(key: string) {
-  return VALID_IDENTIFIER_RE.test(key) ? `.${key}` : `[${genString(key)}]`;
 }

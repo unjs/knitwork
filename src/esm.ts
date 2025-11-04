@@ -1,7 +1,6 @@
 import { CodegenOptions } from "./types";
 import { genString } from "./string";
-import { _genStatement } from "./_utils";
-import { genPropertyAccess } from "./utils";
+import { _genStatement, VALID_IDENTIFIER_RE } from "./_utils";
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
 export type ESMImport = string | { name: string; as?: string };
@@ -128,10 +127,11 @@ export function genDynamicTypeImport(
 ) {
   const commentString = options.comment ? ` /* ${options.comment} */` : "";
   const optionsString = _genDynamicImportAttributes(options);
+  const nameString = name ? (VALID_IDENTIFIER_RE.test(name) ? `.${name}` : `[${genString(name)}]`) : "";
   return `typeof import(${genString(
     specifier,
     options,
-  )}${commentString}${optionsString})${name ? genPropertyAccess(name) : ""}`;
+  )}${commentString}${optionsString})${nameString}`;
 }
 
 // --- internal ---
