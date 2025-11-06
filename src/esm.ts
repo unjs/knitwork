@@ -127,11 +127,12 @@ export function genDynamicTypeImport(
 ) {
   const commentString = options.comment ? ` /* ${options.comment} */` : "";
   const optionsString = _genDynamicImportAttributes(options);
-  const nameString = name
-    ? VALID_IDENTIFIER_RE.test(name)
+  let nameString = "";
+  if (name) {
+    nameString = VALID_IDENTIFIER_RE.test(name)
       ? `.${name}`
-      : `[${genString(name)}]`
-    : "";
+      : `[${genString(name)}]`;
+  }
   return `typeof import(${genString(
     specifier,
     options,
