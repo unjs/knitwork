@@ -24,3 +24,28 @@ describe("genString (singleQuotes: true)", () => {
     });
   }
 });
+
+// Tests for extension option
+const genStringExtensionTests = [
+  [`foo`, `ts`, `"foo.ts"`, `'foo.ts'`],
+  [`bar`, `json`, `"bar.json"`, `'bar.json'`],
+  [`baz`, `json5`, `"baz.json5"`, `'baz.json5'`],
+];
+
+describe("genString (with extension)", () => {
+  for (const [input, extension, output] of genStringExtensionTests) {
+    it(genTestTitle(`${input} with extension ${extension}`), () => {
+      expect(genString(input, { extension })).to.equal(output);
+    });
+  }
+});
+
+describe("genString (singleQuotes: true with extension)", () => {
+  for (const [input, extension, _, output] of genStringExtensionTests) {
+    it(genTestTitle(`${input} with extension ${extension}`), () => {
+      expect(genString(input, { singleQuotes: true, extension })).to.equal(
+        output,
+      );
+    });
+  }
+});
