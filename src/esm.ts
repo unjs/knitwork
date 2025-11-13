@@ -1,6 +1,6 @@
 import { CodegenOptions } from "./types";
 import { genString } from "./string";
-import { _genStatement } from "./_utils";
+import { _genStatement, VALID_IDENTIFIER_RE } from "./_utils";
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
 export type ESMImport = string | { name: string; as?: string };
@@ -105,14 +105,38 @@ export function genDynamicImport(
 ) {
   const commentString = options.comment ? ` /* ${options.comment} */` : "";
   const wrapperString = options.wrapper === false ? "" : "() => ";
-  const ineropString = options.interopDefault
+  const interopString = options.interopDefault
     ? ".then(m => m.default || m)"
     : "";
   const optionsString = _genDynamicImportAttributes(options);
   return `${wrapperString}import(${genString(
     specifier,
     options,
-  )}${commentString}${optionsString})${ineropString}`;
+  )}${commentString}${optionsString})${interopString}`;
+}
+
+/**
+ * Generate an ESM type `import()` statement.
+ *
+ * @group ESM
+ */
+export function genDynamicTypeImport(
+  specifier: string,
+  name: string | undefined,
+  options: Omit<DynamicImportOptions, "wrapper" | "interopDefault"> = {},
+) {
+  const commentString = options.comment ? ` /* ${options.comment} */` : "";
+  const optionsString = _genDynamicImportAttributes(options);
+  let nameString = "";
+  if (name) {
+    nameString = VALID_IDENTIFIER_RE.test(name)
+      ? `.${name}`
+      : `[${genString(name)}]`;
+  }
+  return `typeof import(${genString(
+    specifier,
+    options,
+  )}${commentString}${optionsString})${nameString}`;
 }
 
 // --- internal ---

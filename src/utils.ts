@@ -1,3 +1,4 @@
+import { VALID_IDENTIFIER_RE } from "./_utils";
 import { genString } from "./string";
 
 /**
@@ -19,8 +20,6 @@ export function wrapInDelimiters(
     `${start}\n` + lines.join(withComma ? ",\n" : "\n") + `\n${indent}${end}`
   );
 }
-
-const VALID_IDENTIFIER_RE = /^[$_]?([A-Z_a-z]\w*|\d)$/;
 
 /**
  * Generate a safe javascript variable name for an object key.

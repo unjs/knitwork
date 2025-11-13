@@ -1,6 +1,8 @@
 import { ESMCodeGenOptions, ESMExport, ESMImport } from "./esm";
 import { genString } from "./string";
 
+export const VALID_IDENTIFIER_RE = /^[$_]?([A-Z_a-z]\w*|\d)$/;
+
 type ImportExportType = "import" | "export" | "import type" | "export type";
 
 export function _genStatement(
