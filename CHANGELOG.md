@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.3.0
+
+[compare changes](https://github.com/unjs/knitwork/compare/v1.2.0...v1.3.0)
+
+### 🚀 Enhancements
+
+- Add `genDynamicTypeImport` ([#125](https://github.com/unjs/knitwork/pull/125))
+
+### 🩹 Fixes
+
+- Remove commas in module augmentation ([#114](https://github.com/unjs/knitwork/pull/114))
+
+### ❤️ Contributors
+
+- 山吹色御守 ([@KazariEX](https://github.com/KazariEX))
+- Bobbie Goede <bobbiegoede@gmail.com>
+
 ## v1.2.0
 
 [compare changes](https://github.com/unjs/knitwork/compare/v1.1.0...v1.2.0)
