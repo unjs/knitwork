@@ -39,6 +39,140 @@ const genInterfaceTests: Array<{
   "na'me"?: boolean
 }`,
   },
+  {
+    input: ["FooInterface", {}, { jsdoc: "Simple description" }],
+    code: "/** Simple description */\ninterface FooInterface {}",
+  },
+  {
+    input: [
+      "FooInterface",
+      {},
+      {
+        jsdoc: {
+          description: "Complex description",
+          param: "someParam",
+          returns: "void",
+        },
+      },
+    ],
+    code: `/**
+ * Complex description
+ * @param someParam
+ * @returns void
+ */
+interface FooInterface {}`,
+  },
+  {
+    input: [
+      "FooInterface",
+      {
+        prop: {
+          type: "string",
+          jsdoc: "Property description",
+        },
+      },
+    ],
+    code: `interface FooInterface {
+  /** Property description */
+  prop: string
+}`,
+  },
+  {
+    input: [
+      "FooInterface",
+      {
+        prop: {
+          type: "string",
+          jsdoc: {
+            description: "Complex prop",
+            default: "''",
+            deprecated: "use newProp instead",
+          },
+        },
+      },
+    ],
+    code: `interface FooInterface {
+  /**
+   * Complex prop
+   * @default ''
+   * @deprecated use newProp instead
+   */
+  prop: string
+}`,
+  },
+  {
+    input: [
+      "FooInterface",
+      {
+        nested: {
+          subProp: {
+            type: "boolean",
+            jsdoc: "Nested property",
+          },
+        },
+      },
+    ],
+    code: `interface FooInterface {
+  nested: {
+    /** Nested property */
+    subProp: boolean
+  }
+}`,
+  },
+  {
+    input: [
+      "FooInterface",
+      {
+        nested: {
+          subProp: {
+            type: "boolean",
+            jsdoc: "Nested property",
+          },
+        },
+      },
+      {
+        export: true
+      }
+    ],
+    code: `export interface FooInterface {
+  nested: {
+    /** Nested property */
+    subProp: boolean
+  }
+}`,
+  },
+  {
+    input: [
+      "FooInterface",
+      {
+        nested: {
+          subProp: {
+            type: "boolean",
+            jsdoc: "Nested property",
+          },
+        },
+      },
+      {
+        export: true,
+        jsdoc: {
+          description: "Complex description",
+          param: "someParam",
+          returns: "void",
+        },
+      }
+    ],
+    code: `/**
+ * Complex description
+ * @param someParam
+ * @returns void
+ */
+export interface FooInterface {
+  nested: {
+    /** Nested property */
+    subProp: boolean
+  }
+}`,
+  },
 ];
 
 describe("genInterface", () => {
