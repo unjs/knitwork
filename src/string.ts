@@ -6,10 +6,15 @@ import type { CodegenOptions } from "./types";
  * @group string
  */
 export function genString(input: string, options: CodegenOptions = {}) {
+  if (options.extension) {
+    input = input + "." + options.extension;
+  }
+
   const str = JSON.stringify(input);
   if (!options.singleQuotes) {
     return str;
   }
+
   return `'${escapeString(str).slice(1, -1)}'`;
 }
 
