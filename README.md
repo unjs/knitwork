@@ -114,6 +114,12 @@ genExport("pkg", { name: "*", as: "bar" });
 
 Generate an ESM `import type` statement.
 
+## Html
+
+### `escapeHtml(input)`
+
+Escape HTML string.
+
 ## Serialization
 
 ### `genArrayFromRaw(array, indent, options)`
@@ -206,6 +212,8 @@ Generate a safe javascript variable name for an object key.
 ### `wrapInDelimiters(lines, indent, delimiters, withComma)`
 
 Wrap an array of strings in delimiters.
+
+### `genElement(tag)`
 
 <!-- /automd -->
 
