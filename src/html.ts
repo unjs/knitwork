@@ -1,3 +1,11 @@
+const HTML_ESCAPE_RE: Array<[RegExp, string]> = [
+  [/&/g, "&amp;"],
+  [/</g, "&lt;"],
+  [/>/g, "&gt;"],
+  [/"/g, "&quot;"],
+  [/'/g, "&#39;"],
+];
+
 /**
  * Generate an HTMLElement string representation.
  *
@@ -23,12 +31,18 @@ export function genElement(tag: string = "div", ...args: any[]) {
   const attributes: false | Record<string, unknown> =
     contentIndex !== 0 && args[0];
 
+  const escapedTag = escapeHtml(tag);
   const openingTag = attributes
-    ? `${tag} ${Object.entries(attributes)
+    ? `${escapedTag} ${Object.entries(attributes)
         .map(([attribute, value]) => `${attribute}=${JSON.stringify(value)}`)
         .join(" ")}`
-    : tag;
+    : escapedTag;
   const contentStr = Array.isArray(content) ? content.join("") : content || "";
 
-  return `<${openingTag.trim()}>${contentStr}</${tag}>`;
+  return `<${openingTag.trim()}>${contentStr}</${escapedTag}>`;
+}
+
+function escapeHtml(inputStr: string) {
+  // eslint-disable-next-line unicorn/no-array-reduce
+  return HTML_ESCAPE_RE.reduce((str, curr) => str.replace(curr[0], curr[1]), inputStr)
 }
