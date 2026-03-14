@@ -42,7 +42,7 @@ export function genElement(tag: string = "div", ...args: any[]) {
     ? `${escapedTag} ${stringifyAttributes(attributes)}`
     : escapedTag;
 
-  if (VOID_ELEMENTS.has(tag.toLowerCase())) {
+  if (VOID_ELEMENTS.has(escapedTag.toLowerCase())) {
     return `<${openingTag.trim()} />`;
   }
 

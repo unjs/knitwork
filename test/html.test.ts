@@ -35,10 +35,22 @@ const genElementTests = [
     ],
     code: '<div data-theme="dark"><span>foo</span><span>bar</span></div>',
   },
-  { args: ["br"], code: "<br />" },
-  { args: ["img", { src: "test.png", alt: "Test" }], code: '<img src="test.png" alt="Test" />' },
-  { args: ["button", { disabled: true }], code: "<button disabled></button>" },
-  { args: ["input", { disabled: false, type: "text" }], code: '<input type="text"></input>' },
+  {
+    args: ["br"],
+    code: "<br />",
+  },
+  {
+    args: ["img", { src: "test.png", alt: "Test" }],
+    code: '<img src="test.png" alt="Test" />',
+  },
+  {
+    args: ["button", { disabled: true }],
+    code: "<button disabled></button>",
+  },
+  {
+    args: ["input", { disabled: false, type: "text" }],
+    code: '<input type="text"></input>',
+  },
 ];
 
 describe("genElement", () => {
