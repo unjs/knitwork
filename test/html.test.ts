@@ -1,5 +1,5 @@
 import { expect, describe, it } from "vitest";
-import { genElement } from "../src/html";
+import { genElement } from "../src";
 import { genTestTitle } from "./_utils";
 
 const genElementTests = [

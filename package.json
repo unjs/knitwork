@@ -11,11 +11,6 @@
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs"
-    },
-    "./html": {
-      "import": "./dist/html.mjs",
-      "types": "./dist/html.d.ts",
-      "require": "./dist/html.cjs"
     }
   },
   "main": "./dist/index.cjs",
