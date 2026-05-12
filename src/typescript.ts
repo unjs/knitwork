@@ -18,7 +18,7 @@ export interface GenInterfaceOptions {
  */
 export function genTypeExport(
   specifier: string,
-  imports: ESMImport[],
+  imports: "*" | { name: "*"; as?: string } | ESMImport[],
   options: ESMCodeGenOptions = {},
 ) {
   return _genStatement("export type", specifier, imports, options);

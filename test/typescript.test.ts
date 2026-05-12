@@ -137,6 +137,18 @@ const genTypeImportTests: Array<{
     input: ["@nuxt/utils", [{ name: "test", as: "value" }]],
     code: 'import type { test as value } from "@nuxt/utils";',
   },
+  {
+    input: ["@nuxt/utils", "test"],
+    code: 'import type test from "@nuxt/utils";',
+  },
+  {
+    input: ["@nuxt/utils", { name: "*", as: "value" }],
+    code: 'import type * as value from "@nuxt/utils";',
+  },
+  {
+    input: ["@nuxt/utils", { name: "test" }],
+    code: 'import type test from "@nuxt/utils";',
+  },
 ];
 
 describe("genTypeImport", () => {
@@ -159,6 +171,18 @@ const genTypeExportTests: Array<{
   {
     input: ["@nuxt/utils", [{ name: "test", as: "value" }]],
     code: 'export type { test as value } from "@nuxt/utils";',
+  },
+  {
+    input: ["@nuxt/utils", "*"],
+    code: 'export type * from "@nuxt/utils";',
+  },
+  {
+    input: ["@nuxt/utils", { name: "*" }],
+    code: 'export type * from "@nuxt/utils";',
+  },
+  {
+    input: ["@nuxt/utils", { name: "*", as: "value" }],
+    code: 'export type * as value from "@nuxt/utils";',
   },
 ];
 
