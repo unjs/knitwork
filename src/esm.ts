@@ -75,7 +75,7 @@ export function genImport(
  */
 export function genTypeImport(
   specifier: string,
-  imports: ESMImport[],
+  imports: string | { name: "*"; as: string } | { name: string } | ESMImport[],
   options: ESMCodeGenOptions = {},
 ) {
   return _genStatement("import type", specifier, imports, options);
