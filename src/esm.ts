@@ -95,6 +95,37 @@ export function genExport(
 }
 
 /**
+ * Generate an ESM `export default` statement.
+ *
+ * String values that look like valid JS identifiers are emitted as bare names;
+ * all other values are serialized via `genString`.
+ *
+ * @example
+ *
+ * ```js
+ * genExportDefault("myFunction");
+ * // ~> `export default myFunction;`
+ *
+ * genExportDefault(42);
+ * // ~> `export default 42;`
+ *
+ * genExportDefault({ foo: "bar" });
+ * // ~> `export default {foo: "bar"};`
+ * ```
+ *
+ * @group ESM
+ */
+export function genExportDefault(
+  expression: unknown,
+  options: CodegenOptions = {},
+) {
+  if (typeof expression === "string" && VALID_IDENTIFIER_RE.test(expression)) {
+    return `export default ${expression};`;
+  }
+  return `export default ${genString(expression, options)};`;
+}
+
+/**
  * Generate an ESM dynamic `import()` statement.
  *
  * @group ESM
