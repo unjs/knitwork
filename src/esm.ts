@@ -110,7 +110,7 @@ export function genExport(
  * // ~> `export default 42;`
  *
  * genExportDefault({ foo: "bar" });
- * // ~> `export default {foo: "bar"};`
+ * // ~> `export default {"foo":"bar"};`
  * ```
  *
  * @group ESM

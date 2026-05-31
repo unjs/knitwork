@@ -99,6 +99,14 @@ const genExportDefaultTests = [
     code: `export default myFunction;`,
     options: { singleQuotes: true },
   },
+  // Non-identifier strings (should be quoted)
+  { expression: "my-function", code: 'export default "my-function";' },
+  { expression: "hello world", code: 'export default "hello world";' },
+  {
+    expression: "my-function",
+    code: `export default 'my-function';`,
+    options: { singleQuotes: true },
+  },
 ];
 
 describe("genExportDefault", () => {
