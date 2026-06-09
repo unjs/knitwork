@@ -231,4 +231,10 @@ describe("genEnum", () => {
       expect(code).to.equal(t.code);
     });
   }
+
+  it("throws for an uninitialized member after a string-initialized member", () => {
+    expect(() => genEnum("FooEnum", { A: "a", B: undefined })).to.throw(
+      /must have an initializer/,
+    );
+  });
 });

@@ -108,9 +108,16 @@ export function genEnum(
   indent = "",
 ): string {
   const newIndent = indent + "  ";
+  let previousValue: string | number | undefined;
   const body = wrapInDelimiters(
     Object.entries(members).map(([key, value]) => {
       const member = `${newIndent}${genObjectKey(key)}`;
+      if (value === undefined && typeof previousValue === "string") {
+        throw new TypeError(
+          `Enum member "${key}" must have an initializer because it follows a string-initialized member.`,
+        );
+      }
+      previousValue = value;
       if (value === undefined) {
         return member;
       }
