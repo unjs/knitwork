@@ -10,6 +10,10 @@ export interface GenInterfaceOptions {
   extends?: string | string[];
   export?: boolean;
 }
+export interface GenEnumOptions {
+  export?: boolean;
+  const?: boolean;
+}
 
 /**
  * Generate a typescript `export type` statement.
@@ -90,6 +94,48 @@ export function genInterface(
     .filter(Boolean)
     .join(" ");
   return result;
+}
+
+/**
+ * Generate typescript enum.
+ *
+ * @group Typescript
+ */
+export function genEnum(
+  name: string,
+  members: Record<string, string | number | undefined>,
+  options: GenEnumOptions = {},
+  indent = "",
+): string {
+  const newIndent = indent + "  ";
+  let previousValue: string | number | undefined;
+  const body = wrapInDelimiters(
+    Object.entries(members).map(([key, value]) => {
+      const member = `${newIndent}${genObjectKey(key)}`;
+      if (value === undefined && typeof previousValue === "string") {
+        throw new TypeError(
+          `Enum member "${key}" must have an initializer because it follows a string-initialized member.`,
+        );
+      }
+      previousValue = value;
+      if (value === undefined) {
+        return member;
+      }
+      return `${member} = ${
+        typeof value === "string" ? genString(value) : value
+      }`;
+    }),
+    indent,
+    "{}",
+  );
+  return [
+    options.export && "export",
+    options.const && "const",
+    `enum ${name}`,
+    body,
+  ]
+    .filter(Boolean)
+    .join(" ");
 }
 
 /**

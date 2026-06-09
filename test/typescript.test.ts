@@ -2,6 +2,7 @@ import { expect, describe, it } from "vitest";
 import {
   genInterface,
   genAugmentation,
+  genEnum,
   genInlineTypeImport,
   genTypeImport,
   genTypeExport,
@@ -169,4 +170,71 @@ describe("genTypeExport", () => {
       expect(code).to.equal(t.code);
     });
   }
+});
+
+const genEnumTests: Array<{
+  input: Parameters<typeof genEnum>;
+  code: string;
+}> = [
+  { input: ["FooEnum", {}], code: "enum FooEnum {}" },
+  {
+    input: ["Direction", { Up: undefined, Down: undefined }],
+    code: `enum Direction {
+  Up,
+  Down
+}`,
+  },
+  {
+    input: ["Status", { Ok: 200, NotFound: 404 }],
+    code: `enum Status {
+  Ok = 200,
+  NotFound = 404
+}`,
+  },
+  {
+    input: ["Color", { Red: "red", Green: "green" }],
+    code: `enum Color {
+  Red = "red",
+  Green = "green"
+}`,
+  },
+  {
+    input: ["FooEnum", { "foo bar": 1 }],
+    code: `enum FooEnum {
+  "foo bar" = 1
+}`,
+  },
+  {
+    input: ["FooEnum", { A: 0 }, { export: true }],
+    code: `export enum FooEnum {
+  A = 0
+}`,
+  },
+  {
+    input: ["FooEnum", { A: 0 }, { const: true }],
+    code: `const enum FooEnum {
+  A = 0
+}`,
+  },
+  {
+    input: ["FooEnum", { A: 0 }, { export: true, const: true }],
+    code: `export const enum FooEnum {
+  A = 0
+}`,
+  },
+];
+
+describe("genEnum", () => {
+  for (const t of genEnumTests) {
+    it(genTestTitle(t.code), () => {
+      const code = genEnum(...t.input);
+      expect(code).to.equal(t.code);
+    });
+  }
+
+  it("throws for an uninitialized member after a string-initialized member", () => {
+    expect(() => genEnum("FooEnum", { A: "a", B: undefined })).to.throw(
+      /must have an initializer/,
+    );
+  });
 });
