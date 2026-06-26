@@ -2,6 +2,7 @@ import { expect, describe, it } from "vitest";
 import {
   genImport,
   genExport,
+  genExportDefault,
   genDynamicImport,
   genSafeVariableName,
   genDynamicTypeImport,
@@ -75,6 +76,23 @@ describe("genExport", () => {
   for (const t of genExportTests) {
     it(genTestTitle(t.code), () => {
       const code = genExport("pkg", t.names, t.options);
+      expect(code).to.equal(t.code);
+    });
+  }
+});
+
+const genExportDefaultTests = [
+  { expression: "foo", code: "export default foo;" },
+  { expression: "{ foo: 1 }", code: "export default { foo: 1 };" },
+  { expression: "() => {}", code: "export default () => {};" },
+  { expression: '"hello"', code: 'export default "hello";' },
+  { expression: "42", code: "export default 42;" },
+];
+
+describe("genExportDefault", () => {
+  for (const t of genExportDefaultTests) {
+    it(genTestTitle(t.code), () => {
+      const code = genExportDefault(t.expression);
       expect(code).to.equal(t.code);
     });
   }

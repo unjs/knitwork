@@ -74,6 +74,25 @@ Generate an ESM type `import()` statement.
 
 Generate an ESM `export` statement.
 
+### `genExportDefault(expression)`
+
+Generate an ESM `export default` statement.
+
+The expression is used as-is and is not escaped or quoted. Use a serialization helper such as `genObjectFromValues` or `JSON.stringify` to generate the expression from a runtime value.
+
+**Example:**
+
+```js
+genExportDefault("foo");
+// ~> `export default foo;`
+
+genExportDefault("{ foo: 1 }");
+// ~> `export default { foo: 1 };`
+
+genExportDefault("() => {}");
+// ~> `export default () => {};`
+```
+
 ### `genImport(specifier, imports?, options)`
 
 Generate an ESM `import` statement.
