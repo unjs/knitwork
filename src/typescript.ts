@@ -93,7 +93,7 @@ export function genInterface(
 }
 
 /**
- * Generate typescript `declare module` augmentation.
+ * Generate typescript `declare module` or `declare global` augmentation.
  *
  * @group Typescript
  */
@@ -104,7 +104,37 @@ export function genAugmentation(
     TypeObject | [TypeObject, Omit<GenInterfaceOptions, "export">]
   >,
 ): string {
-  return `declare module ${genString(specifier)} ${wrapInDelimiters(
+  const statement =
+    specifier === "global"
+      ? "declare global"
+      : `declare module ${genString(specifier)}`;
+  return `${statement} ${wrapInDelimiters(
+    Object.entries(interfaces || {}).map(
+      ([key, entry]) =>
+        "  " +
+        (Array.isArray(entry)
+          ? genInterface(key, ...entry)
+          : genInterface(key, entry, {}, "  ")),
+    ),
+    undefined,
+    undefined,
+    false,
+  )}`;
+}
+
+/**
+ * Generate typescript `declare namespace` statement.
+ *
+ * @group Typescript
+ */
+export function genNamespace(
+  name: string,
+  interfaces?: Record<
+    string,
+    TypeObject | [TypeObject, Omit<GenInterfaceOptions, "export">]
+  >,
+): string {
+  return `declare namespace ${name} ${wrapInDelimiters(
     Object.entries(interfaces || {}).map(
       ([key, entry]) =>
         "  " +
