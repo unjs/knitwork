@@ -93,7 +93,7 @@ export function genInterface(
 }
 
 /**
- * Generate typescript `declare module` augmentation.
+ * Generate typescript `declare module` or `declare global` augmentation.
  *
  * @group Typescript
  */
@@ -104,7 +104,11 @@ export function genAugmentation(
     TypeObject | [TypeObject, Omit<GenInterfaceOptions, "export">]
   >,
 ): string {
-  return `declare module ${genString(specifier)} ${wrapInDelimiters(
+  const statement =
+    specifier === "global"
+      ? "declare global"
+      : `declare module ${genString(specifier)}`;
+  return `${statement} ${wrapInDelimiters(
     Object.entries(interfaces || {}).map(
       ([key, entry]) =>
         "  " +
@@ -116,4 +120,66 @@ export function genAugmentation(
     undefined,
     false,
   )}`;
+}
+
+/**
+ * Generate typescript `declare namespace` statement.
+ *
+ * @group Typescript
+ */
+export function genNamespace(
+  name: string,
+  interfaces?: Record<
+    string,
+    TypeObject | [TypeObject, Omit<GenInterfaceOptions, "export">]
+  >,
+): string {
+  return `declare namespace ${name} ${wrapInDelimiters(
+    Object.entries(interfaces || {}).map(
+      ([key, entry]) =>
+        "  " +
+        (Array.isArray(entry)
+          ? genInterface(key, ...entry)
+          : genInterface(key, entry, {}, "  ")),
+    ),
+    undefined,
+    undefined,
+    false,
+  )}`;
+}
+
+export interface GenEnumOptions {
+  const?: boolean;
+  export?: boolean;
+}
+
+/**
+ * Generate typescript enum.
+ *
+ * @group Typescript
+ */
+export function genEnum(
+  name: string,
+  members: Record<string, string | number> | string[],
+  options: GenEnumOptions = {},
+  indent = "",
+): string {
+  const newIndent = indent + "  ";
+  const memberEntries = Array.isArray(members)
+    ? members.map((m) => `${newIndent}${genObjectKey(m)} = ${genString(m)}`)
+    : Object.entries(members).map(([k, v]) => {
+        const valueStr = typeof v === "number" ? String(v) : genString(v);
+        return `${newIndent}${genObjectKey(k)} = ${valueStr}`;
+      });
+
+  const statement = [
+    options.export && "export",
+    options.const && "const",
+    `enum ${name}`,
+    wrapInDelimiters(memberEntries, indent, "{}", true),
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return statement;
 }
