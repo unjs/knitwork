@@ -2,9 +2,11 @@ import { expect, describe, it } from "vitest";
 import {
   genInterface,
   genAugmentation,
+  genNamespace,
   genInlineTypeImport,
   genTypeImport,
   genTypeExport,
+  genEnum,
 } from "../src";
 import { genTestTitle } from "./_utils";
 
@@ -94,12 +96,46 @@ const genAugmentationTests: Array<{
   interface MyInterface extends OtherInterface, FurtherInterface {}
 }`,
   },
+  { input: ["global"], code: "declare global {}" },
+  {
+    input: ["global", { Window: {} }],
+    code: `declare global {
+  interface Window {}
+}`,
+  },
 ];
 
 describe("genAugmentation", () => {
   for (const t of genAugmentationTests) {
     it(genTestTitle(t.code), () => {
       const code = genAugmentation(...t.input);
+      expect(code).to.equal(t.code);
+    });
+  }
+});
+
+const genNamespaceTests: Array<{
+  input: Parameters<typeof genNamespace>;
+  code: string;
+}> = [
+  { input: ["MyNamespace"], code: "declare namespace MyNamespace {}" },
+  {
+    input: [
+      "MyNamespace",
+      {
+        MyInterface: {},
+      },
+    ],
+    code: `declare namespace MyNamespace {
+  interface MyInterface {}
+}`,
+  },
+];
+
+describe("genNamespace", () => {
+  for (const t of genNamespaceTests) {
+    it(genTestTitle(t.code), () => {
+      const code = genNamespace(...t.input);
       expect(code).to.equal(t.code);
     });
   }
@@ -166,6 +202,42 @@ describe("genTypeExport", () => {
   for (const t of genTypeExportTests) {
     it(genTestTitle(t.code), () => {
       const code = genTypeExport(...t.input);
+      expect(code).to.equal(t.code);
+    });
+  }
+});
+
+const genEnumTests: Array<{
+  input: Parameters<typeof genEnum>;
+  code: string;
+}> = [
+  {
+    input: ["Foo", ["Bar", "Baz"]],
+    code: `enum Foo {
+  Bar = "Bar",
+  Baz = "Baz"
+}`,
+  },
+  {
+    input: ["Foo", { Bar: "bar", Baz: "baz" }, { export: true }],
+    code: `export enum Foo {
+  Bar = "bar",
+  Baz = "baz"
+}`,
+  },
+  {
+    input: ["Foo", { Bar: 0, Baz: 1 }, { const: true, export: true }],
+    code: `export const enum Foo {
+  Bar = 0,
+  Baz = 1
+}`,
+  },
+];
+
+describe("genEnum", () => {
+  for (const t of genEnumTests) {
+    it(genTestTitle(t.code), () => {
+      const code = genEnum(...t.input);
       expect(code).to.equal(t.code);
     });
   }
