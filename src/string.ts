@@ -6,11 +6,40 @@ import type { CodegenOptions } from "./types";
  * @group string
  */
 export function genString(input: string, options: CodegenOptions = {}) {
-  const str = JSON.stringify(input);
+  // `JSON.stringify` escapes backslashes, control characters and `"`, but
+  // leaves U+2028/U+2029 raw. They are legal in ES2019+ string literals, but
+  // not in JSON, so escape them to keep the output safe to embed anywhere.
+  const str = JSON.stringify(input).replace(LINE_SEPARATOR_RE, (char) =>
+    char === "\u2028" ? "\\u2028" : "\\u2029",
+  );
   if (!options.singleQuotes) {
     return str;
   }
-  return `'${escapeString(str).slice(1, -1)}'`;
+  // Re-quote the escaped body rather than escaping it a second time.
+  return `'${singleQuoteBody(str.slice(1, -1))}'`;
+}
+
+const LINE_SEPARATOR_RE = /[\u2028\u2029]/g;
+
+/**
+ * Convert the body of a double-quoted JSON string literal to a single-quoted
+ * one: `\"` no longer needs escaping, `'` now does. Every other escape
+ * sequence (`\\`, `\n`, `\uXXXX`, ...) is already valid and is copied as is.
+ */
+function singleQuoteBody(body: string): string {
+  let result = "";
+  for (let index = 0; index < body.length; index++) {
+    const char = body[index];
+    if (char === "\\") {
+      // An escape sequence: skip past it so its payload is never re-escaped.
+      const escaped = body[index + 1];
+      result += escaped === '"' ? '"' : char + escaped;
+      index++;
+    } else {
+      result += char === "'" ? "\\'" : char;
+    }
+  }
+  return result;
 }
 
 // https://github.com/rollup/rollup/blob/master/src/utils/escapeId.ts
