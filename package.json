@@ -29,7 +29,7 @@
     "test": "pnpm lint && vitest run --coverage"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.0.8",
+    "@vitest/coverage-v8": "^5.0.0",
     "automd": "^0.4.2",
     "changelogen": "^0.6.2",
     "esbuild": "^0.25.12",
