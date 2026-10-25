@@ -1,5 +1,5 @@
 import { _genStatement } from "./_utils";
-import { ESMCodeGenOptions, ESMImport, genDynamicImport } from "./esm";
+import { ESMCodeGenOptions, genDynamicImport } from "./esm";
 import { genString } from "./string";
 import { genObjectKey, wrapInDelimiters } from "./utils";
 
@@ -11,18 +11,7 @@ export interface GenInterfaceOptions {
   export?: boolean;
 }
 
-/**
- * Generate a typescript `export type` statement.
- *
- * @group Typescript
- */
-export function genTypeExport(
-  specifier: string,
-  imports: ESMImport[],
-  options: ESMCodeGenOptions = {},
-) {
-  return _genStatement("export type", specifier, imports, options);
-}
+export { genTypeExport } from "./esm";
 
 /**
  * Generate an typescript `typeof import()` statement for default import.

@@ -75,7 +75,7 @@ export function genImport(
  */
 export function genTypeImport(
   specifier: string,
-  imports: ESMImport[],
+  imports?: ESMImport | ESMImport[],
   options: ESMCodeGenOptions = {},
 ) {
   return _genStatement("import type", specifier, imports, options);
@@ -92,6 +92,19 @@ export function genExport(
   options: ESMCodeGenOptions = {},
 ) {
   return _genStatement("export", specifier, exports, options);
+}
+
+/**
+ * Generate an ESM `export type` statement.
+ *
+ * @group ESM
+ */
+export function genTypeExport(
+  specifier: string,
+  exports?: ESMExport | ESMExport[],
+  options: ESMCodeGenOptions = {},
+) {
+  return _genStatement("export type", specifier, exports, options);
 }
 
 /**
