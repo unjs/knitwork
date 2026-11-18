@@ -106,7 +106,7 @@ export function genDynamicImport(
   const commentString = options.comment ? ` /* ${options.comment} */` : "";
   const wrapperString = options.wrapper === false ? "" : "() => ";
   const interopString = options.interopDefault
-    ? ".then(m => m.default || m)"
+    ? '.then(m => m && (typeof m === "object" || typeof m === "function") && "default" in m ? m.default : m)'
     : "";
   const optionsString = _genDynamicImportAttributes(options);
   return `${wrapperString}import(${genString(
