@@ -85,7 +85,7 @@ const genDynamicImportTests = [
   { opts: { wrapper: false }, code: 'import("pkg")' },
   {
     opts: { interopDefault: true },
-    code: '() => import("pkg").then(m => m.default || m)',
+    code: '() => import("pkg").then(m => m && (typeof m === "object" || typeof m === "function") && "default" in m ? m.default : m)',
   },
   {
     opts: { comment: 'webpackChunkName: "chunks/dynamic"' },
@@ -108,6 +108,43 @@ describe("genDynamicImport", () => {
       expect(code).to.equal(t.code);
     });
   }
+
+  it("preserves falsy default exports with interopDefault", async () => {
+    const cases = ["false", "0", '""', "null", "undefined", "NaN"];
+
+    for (const exported of cases) {
+      const specifier = `data:text/javascript,export default ${exported}`;
+      const expected = (await import(specifier)).default;
+      for (const wrapper of [true, false]) {
+        const code = genDynamicImport(specifier, {
+          wrapper,
+          interopDefault: true,
+        });
+        const executable = wrapper ? code : `() => ${code}`;
+        const generatedModule = await import(
+          `data:text/javascript,${encodeURIComponent(`export default (Object) => ${executable}`)}`
+        );
+        const result = await generatedModule.default(undefined)();
+        expect(result, code).toEqual(expected);
+      }
+    }
+  });
+
+  it("handles values resolved by a module's then export", async () => {
+    const specifier =
+      "data:text/javascript,export function then(resolve) { resolve(false) }";
+    for (const wrapper of [true, false]) {
+      const code = genDynamicImport(specifier, {
+        wrapper,
+        interopDefault: true,
+      });
+      const executable = wrapper ? code : `() => ${code}`;
+      const generatedModule = await import(
+        `data:text/javascript,${encodeURIComponent(`export default (Object) => ${executable}`)}`
+      );
+      expect(await generatedModule.default(undefined)()).toBe(false);
+    }
+  });
 });
 
 const genDynamicTypeImportTests = [
